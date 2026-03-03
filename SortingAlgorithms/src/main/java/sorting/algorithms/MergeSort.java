@@ -8,6 +8,7 @@ public class MergeSort extends AbstractSort {
 
     @Override
     public void sort(int[] array) {
+       reset();
         int n = array.length;
         if (n < 2) return;
 

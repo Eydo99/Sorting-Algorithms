@@ -9,6 +9,7 @@ public class HeapSort extends AbstractSort {
     }
     @Override
     public void sort(int[] array) {
+        reset();
         heapSort(array);
     }
 

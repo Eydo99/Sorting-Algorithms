@@ -9,7 +9,9 @@ public class QuickSort extends AbstractSort {
     }
 
     @Override
-    public void sort(int[] array) {
+    public void sort(int[] array)
+    {
+        reset();
         quickSort(array,0,array.length-1);
     }
 
