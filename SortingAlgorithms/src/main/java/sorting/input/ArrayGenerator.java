@@ -12,7 +12,7 @@ import java.util.Random;
 public class ArrayGenerator {
 
 
-    public int[] generateFromFile(String fileName)  {
+    public static int[] generateFromFile(String fileName)  {
         String path = "data/input/"+fileName;
         try(BufferedReader reader = new BufferedReader(new FileReader(path)))
         {
@@ -30,7 +30,7 @@ public class ArrayGenerator {
         return null;
     }
 
-    public int[] generateFromRandom(int arraySize,ArrayType arrayType)
+    public static int[] generateFromRandom(int arraySize,ArrayType arrayType)
     {
         int[] array = new int[arraySize];
         Random random = new Random();
@@ -60,7 +60,7 @@ public class ArrayGenerator {
     }
 
 
-    private int[] parseFileInput(String line)
+    private static int[] parseFileInput(String line)
     {
         line=line.replaceAll("[\\[\\]]","");
         String[] lines = line.split(", ");
