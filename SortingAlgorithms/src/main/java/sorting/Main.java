@@ -7,7 +7,7 @@ public class Main {
 
     public static void main(String[] args) {
 
-        QuickSort sorter = new QuickSort();
+        HeapSort sorter = new HeapSort();
 
         // Test 1 - Random array
         int[] arr1 = {5, 3, 8, 1, 9, 2, 7, 4, 6};
