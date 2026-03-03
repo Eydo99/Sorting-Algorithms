@@ -54,7 +54,7 @@ public class CSVExporter {
         }
     }
 
-    public  void exportAll(List<List<SortResult>> allResults, String filePath) {
+    public static   void exportAll(List<List<SortResult>> allResults, String filePath) {
         for(List<SortResult> results : allResults) {
             ComparisonSummary summary = ComparisonSummary.getSummary(results);
             export(results, summary, filePath);
