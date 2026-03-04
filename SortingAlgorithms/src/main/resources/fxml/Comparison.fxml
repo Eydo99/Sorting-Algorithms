@@ -1,14 +1,112 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane xmlns="http://javafx.com/javafx"
+<ScrollPane fitToWidth="true"
+            xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
-            fx:controller="sorting.ui.ComparisonController"
-            prefHeight="400.0" prefWidth="600.0">
+            fx:controller="sorting.ui.ComparisonController">
+    <content>
+        <VBox spacing="10" style="-fx-padding: 10;">
 
-</AnchorPane>
+            <!-- ADD TASK SECTION -->
+            <TitledPane text="Add Task" animated="false" collapsible="false">
+                <content>
+                    <GridPane hgap="10" vgap="8" style="-fx-padding: 10;">
+                        <columnConstraints>
+                            <ColumnConstraints minWidth="100"/>
+                            <ColumnConstraints minWidth="150"/>
+                            <ColumnConstraints minWidth="60"/>
+                            <ColumnConstraints minWidth="150"/>
+                        </columnConstraints>
+
+                        <Label text="Algorithm:" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
+                        <ComboBox fx:id="algorithmCombo" prefWidth="150"
+                                  GridPane.rowIndex="0" GridPane.columnIndex="1"/>
+
+                        <Label text="Runs:" GridPane.rowIndex="0" GridPane.columnIndex="2"/>
+                        <TextField fx:id="runsField" prefWidth="150"
+                                   GridPane.rowIndex="0" GridPane.columnIndex="3"/>
+
+                        <Label text="Array Size:" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
+                        <TextField fx:id="arraySizeField" prefWidth="150"
+                                   GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+
+                        <Label text="Array Type:" GridPane.rowIndex="2" GridPane.columnIndex="0"/>
+                        <ComboBox fx:id="arrayTypeCombo" prefWidth="150"
+                                  GridPane.rowIndex="2" GridPane.columnIndex="1"/>
+
+                        <Label text="From File:" GridPane.rowIndex="3" GridPane.columnIndex="0"/>
+                        <CheckBox fx:id="fromFileCheck"
+                                  GridPane.rowIndex="3" GridPane.columnIndex="1"/>
+
+                        <Label text="File Name:" GridPane.rowIndex="4" GridPane.columnIndex="0"/>
+                        <TextField fx:id="fileNameField" prefWidth="150" disable="true"
+                                   GridPane.rowIndex="4" GridPane.columnIndex="1"/>
+
+                        <Button fx:id="addTaskBtn" text="Add Task"
+                                GridPane.rowIndex="5" GridPane.columnIndex="1"/>
+                    </GridPane>
+                </content>
+            </TitledPane>
+
+            <!-- PENDING TASKS SECTION -->
+            <TitledPane text="Pending Tasks" animated="false" collapsible="false">
+                <content>
+                    <VBox spacing="8" style="-fx-padding: 10;">
+                        <TableView fx:id="pendingTasksTable" prefHeight="150">
+                            <columns>
+                                <TableColumn fx:id="pendingAlgoCol"    text="Algorithm" prefWidth="120"/>
+                                <TableColumn fx:id="pendingSizeCol"    text="Size"      prefWidth="80"/>
+                                <TableColumn fx:id="pendingTypeCol"    text="Type"      prefWidth="120"/>
+                                <TableColumn fx:id="pendingRunsCol"    text="Runs"      prefWidth="80"/>
+                                <TableColumn fx:id="pendingFromFileCol" text="FromFile" prefWidth="80"/>
+                            </columns>
+                        </TableView>
+
+                        <HBox spacing="10">
+                            <Button fx:id="runSequentialBtn" text="Run All Sequential"/>
+                            <Button fx:id="runParallelBtn"   text="Run All Parallel"/>
+                            <Button fx:id="exportCsvBtn"     text="Export CSV"/>
+                            <Button fx:id="clearBtn"         text="Clear"/>
+                        </HBox>
+                    </VBox>
+                </content>
+            </TitledPane>
+
+            <!-- RESULTS SECTION -->
+            <TitledPane text="Results" animated="false" collapsible="false">
+                <content>
+                    <VBox spacing="8" style="-fx-padding: 10;">
+                        <TableView fx:id="resultsTable" prefHeight="200">
+                            <columns>
+                                <TableColumn fx:id="resultAlgoCol"   text="Algorithm"    prefWidth="110"/>
+                                <TableColumn fx:id="resultSizeCol"   text="Size"         prefWidth="60"/>
+                                <TableColumn fx:id="resultTypeCol"   text="Type"         prefWidth="100"/>
+                                <TableColumn fx:id="resultRunCol"    text="Run"          prefWidth="40"/>
+                                <TableColumn fx:id="resultTimeCol"   text="Time(ns)"     prefWidth="80"/>
+                                <TableColumn fx:id="resultCompCol"   text="Comparisons"  prefWidth="100"/>
+                                <TableColumn fx:id="resultInterCol"  text="Interchanges" prefWidth="100"/>
+                            </columns>
+                        </TableView>
+
+                        <TitledPane text="Summary" animated="false" collapsible="false">
+                            <content>
+                                <GridPane hgap="20" vgap="6" style="-fx-padding: 8;">
+                                    <Label text="Avg:" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
+                                    <Label fx:id="avgLabel" text="--" GridPane.rowIndex="0" GridPane.columnIndex="1"/>
+                                    <Label text="Min:" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
+                                    <Label fx:id="minLabel" text="--" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+                                    <Label text="Max:" GridPane.rowIndex="2" GridPane.columnIndex="0"/>
+                                    <Label fx:id="maxLabel" text="--" GridPane.rowIndex="2" GridPane.columnIndex="1"/>
+                                </GridPane>
+                            </content>
+                        </TitledPane>
+                    </VBox>
+                </content>
+            </TitledPane>
+
+        </VBox>
+    </content>
+</ScrollPane>

@@ -1,14 +1,61 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane xmlns="http://javafx.com/javafx"
+<ScrollPane fitToWidth="true"
+            xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
-            fx:controller="sorting.ui.VisualizationController"
-            prefHeight="400.0" prefWidth="600.0">
+            fx:controller="sorting.ui.VisualizationController">
+    <content>
+        <VBox spacing="10" style="-fx-padding: 10;">
 
-</AnchorPane>
+            <!-- SETUP SECTION -->
+            <TitledPane text="Setup" animated="false" collapsible="false">
+                <content>
+                    <GridPane hgap="10" vgap="8" style="-fx-padding: 10;">
+                        <columnConstraints>
+                            <ColumnConstraints minWidth="120"/>
+                            <ColumnConstraints minWidth="150"/>
+                        </columnConstraints>
+
+                        <Label text="Algorithm:"   GridPane.rowIndex="0" GridPane.columnIndex="0"/>
+                        <ComboBox fx:id="vizAlgoCombo" prefWidth="150"
+                                  GridPane.rowIndex="0" GridPane.columnIndex="1"/>
+
+                        <Label text="Array Size (max 100):" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
+                        <TextField fx:id="vizSizeField" prefWidth="150"
+                                   GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+
+                        <Label text="Array Type:"  GridPane.rowIndex="2" GridPane.columnIndex="0"/>
+                        <ComboBox fx:id="vizTypeCombo" prefWidth="150"
+                                  GridPane.rowIndex="2" GridPane.columnIndex="1"/>
+
+                        <Button fx:id="addVisualizerBtn" text="Add Visualizer"
+                                GridPane.rowIndex="3" GridPane.columnIndex="1"/>
+                    </GridPane>
+                </content>
+            </TitledPane>
+
+            <!-- PLAYBACK CONTROLS -->
+            <HBox spacing="10" style="-fx-padding: 5 10;">
+                <Label text="Speed: 0.5x"/>
+                <Slider fx:id="speedSlider" min="0.5" max="4.0" value="1.0"
+                        prefWidth="200" showTickMarks="true"/>
+                <Label text="4x"/>
+            </HBox>
+
+            <HBox spacing="10" style="-fx-padding: 0 10;">
+                <Button fx:id="playBtn"  text="▶ Play"/>
+                <Button fx:id="pauseBtn" text="⏸ Pause"/>
+                <Button fx:id="stepBtn"  text="⏭ Step"/>
+                <Button fx:id="resetBtn" text="↺ Reset"/>
+            </HBox>
+
+            <!-- VISUALIZER PANELS (filled dynamically at runtime) -->
+            <HBox fx:id="visualizerBox" spacing="15" style="-fx-padding: 10;">
+            </HBox>
+
+        </VBox>
+    </content>
+</ScrollPane>
