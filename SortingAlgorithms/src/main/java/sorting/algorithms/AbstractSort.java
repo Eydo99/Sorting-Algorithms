@@ -1,12 +1,14 @@
 package sorting.algorithms;
 
+import sorting.model.SortStep;
+
 import java.util.ArrayList;
 import java.util.List;
 
 public abstract class AbstractSort implements  SortAlgorithm {
     protected long comparisons=0;
     protected  long interchanges=0;
-    protected  List<int[]> steps=new ArrayList<>();
+    protected  List<SortStep> steps=new ArrayList<>();
     protected  boolean collectSteps=false;
     String name;
 
@@ -16,9 +18,9 @@ public abstract class AbstractSort implements  SortAlgorithm {
         current[j]=temp;
     }
 
-    protected void addStep(int[] current){
+    protected void addStep(int[] current,int activeIndex){
         if(collectSteps){
-            steps.add(current.clone());
+            steps.add(new SortStep(current,activeIndex));
         }
     }
 
@@ -33,7 +35,7 @@ public abstract class AbstractSort implements  SortAlgorithm {
     }
 
     @Override
-    public List<int[]> getSteps(){
+    public List<SortStep> getSteps(){
         return steps;
     }
 

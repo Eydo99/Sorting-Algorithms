@@ -17,14 +17,14 @@ public class InsertionSort extends AbstractSort {
                 if(array[j]>temp){
                     array[j+1]=array[j];
                     interchanges++;
-                    addStep(array.clone());
+                    addStep(array.clone(),j+1);
                     j--;
                 }
                 else break;
             }
             array[j+1]=temp;
             interchanges++;
-            addStep(array.clone());
+            addStep(array.clone(),j+1);
         }
     }
 

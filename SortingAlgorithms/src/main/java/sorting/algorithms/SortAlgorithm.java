@@ -1,5 +1,7 @@
 package sorting.algorithms;
 
+import sorting.model.SortStep;
+
 import java.util.List;
 
 public interface SortAlgorithm {
@@ -8,5 +10,6 @@ public interface SortAlgorithm {
     long getComparisons();
     long getInterchanges();
     void reset();
-    List<int[]> getSteps();
+    List<SortStep> getSteps();
+    void setSteps(boolean collectSteps);
 }

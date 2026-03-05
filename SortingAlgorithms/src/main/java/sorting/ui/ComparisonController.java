@@ -224,6 +224,11 @@ public class ComparisonController {
 
     private List<ComparisonTask> buildTasksFromForm() {
         List<String> selectedAlgorithms=getSelectedAlgorithms();
+        if(selectedAlgorithms.isEmpty())
+        {
+            showAlert("No algorithms selected.");
+            return null;
+        }
 
         int size;
         try
@@ -275,7 +280,6 @@ public class ComparisonController {
         pendingTasks.addAll(tasks);
         return tasks;
     }
-
 
 
     private List<String> getSelectedAlgorithms() {

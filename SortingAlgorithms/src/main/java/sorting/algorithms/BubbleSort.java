@@ -15,7 +15,7 @@ public class BubbleSort extends AbstractSort {
                 if(array[j]>array[j+1]) {
                     swap(array,j,j+1);
                     interchanges++;
-                    addStep(array.clone());
+                    addStep(array.clone(),j);
                 }
                 comparisons++;
             }

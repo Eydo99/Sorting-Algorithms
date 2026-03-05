@@ -28,7 +28,7 @@ public class QuickSort extends AbstractSort {
         int pivot=random.nextInt(p,r+1);
         swap(array,pivot,p);
         interchanges++;
-        addStep(array.clone());
+        addStep(array.clone(),pivot);
         return  partition(array,p,r);
     }
 
@@ -45,7 +45,7 @@ public class QuickSort extends AbstractSort {
                 {
                     swap(array,i,j);
                     interchanges++;
-                    addStep(array.clone());
+                    addStep(array.clone(),j);
                 }
             }
             comparisons++;
@@ -54,7 +54,7 @@ public class QuickSort extends AbstractSort {
         {
             swap(array,i,p);
             interchanges++;
-            addStep(array.clone());
+            addStep(array.clone(),i);
         }
 
         return  i;

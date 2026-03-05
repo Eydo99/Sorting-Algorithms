@@ -50,7 +50,7 @@ public class MergeSort extends AbstractSort {
                 i++;
                 interchanges++;
             }
-            addStep(array.clone());
+            addStep(array.clone(),i);
             comparisons++;
         }
         while(l<leftSize){
@@ -58,7 +58,7 @@ public class MergeSort extends AbstractSort {
             l++;
             i++;
             interchanges++;
-            addStep(array.clone());
+            addStep(array.clone(),i);
         }
 
         while(rightSize>r){
@@ -66,7 +66,7 @@ public class MergeSort extends AbstractSort {
             r++;
             i++;
             interchanges++;
-            addStep(array.clone());
+            addStep(array.clone(),i);
         }
     }
 

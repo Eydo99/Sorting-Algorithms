@@ -7,8 +7,7 @@
 <VBox xmlns="http://javafx.com/javafx"
        xmlns:fx="http://javafx.com/fxml"
        fx:controller="sorting.ui.ComparisonController"
-       styleClass="root-container"
-       stylesheets="@/css/style.css">
+       styleClass="root-container">
 
     <!-- ── CONTROL BAR ── -->
     <HBox styleClass="control-bar" alignment="CENTER_LEFT" spacing="16">

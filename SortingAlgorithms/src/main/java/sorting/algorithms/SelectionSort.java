@@ -20,9 +20,9 @@ public class SelectionSort  extends AbstractSort {
             {
                 swap(array, i, min);
                 interchanges++;
-                addStep(array.clone());
+                addStep(array.clone(),i);
             }
-            else addStep(array.clone());
+            else addStep(array.clone(),i);
         }
     }
 

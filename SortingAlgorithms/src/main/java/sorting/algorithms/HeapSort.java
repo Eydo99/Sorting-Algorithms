@@ -31,7 +31,7 @@ public class HeapSort extends AbstractSort {
         if(largest != i) {
             swap(array, i, largest);
             interchanges++;
-            addStep(array.clone());
+            addStep(array.clone(),i);
             max_heapify(array, largest);
         }
     }
@@ -50,7 +50,7 @@ public class HeapSort extends AbstractSort {
         {
             swap(array,0,i);
             interchanges++;
-            addStep(array.clone());
+            addStep(array.clone(),i);
             heapSize--;
             max_heapify(array,0);
         }
