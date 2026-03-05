@@ -2,60 +2,77 @@
 
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
 
-<ScrollPane fitToWidth="true"
-            xmlns="http://javafx.com/javafx"
-            xmlns:fx="http://javafx.com/fxml"
-            fx:controller="sorting.ui.VisualizationController">
-    <content>
-        <VBox spacing="10" style="-fx-padding: 10;">
+<VBox xmlns="http://javafx.com/javafx"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="sorting.ui.VisualizationController"
+      styleClass="root-container">
 
-            <!-- SETUP SECTION -->
-            <TitledPane text="Setup" animated="false" collapsible="false">
-                <content>
-                    <GridPane hgap="10" vgap="8" style="-fx-padding: 10;">
-                        <columnConstraints>
-                            <ColumnConstraints minWidth="120"/>
-                            <ColumnConstraints minWidth="150"/>
-                        </columnConstraints>
+    <!-- ── CONTROL BAR ── -->
+    <HBox styleClass="control-bar" alignment="CENTER_LEFT" spacing="16">
 
-                        <Label text="Algorithm:"   GridPane.rowIndex="0" GridPane.columnIndex="0"/>
-                        <ComboBox fx:id="vizAlgoCombo" prefWidth="150"
-                                  GridPane.rowIndex="0" GridPane.columnIndex="1"/>
-
-                        <Label text="Array Size (max 100):" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
-                        <TextField fx:id="vizSizeField" prefWidth="150"
-                                   GridPane.rowIndex="1" GridPane.columnIndex="1"/>
-
-                        <Label text="Array Type:"  GridPane.rowIndex="2" GridPane.columnIndex="0"/>
-                        <ComboBox fx:id="vizTypeCombo" prefWidth="150"
-                                  GridPane.rowIndex="2" GridPane.columnIndex="1"/>
-
-                        <Button fx:id="addVisualizerBtn" text="Add Visualizer"
-                                GridPane.rowIndex="3" GridPane.columnIndex="1"/>
-                    </GridPane>
-                </content>
-            </TitledPane>
-
-            <!-- PLAYBACK CONTROLS -->
-            <HBox spacing="10" style="-fx-padding: 5 10;">
-                <Label text="Speed: 0.5x"/>
-                <Slider fx:id="speedSlider" min="0.5" max="4.0" value="1.0"
-                        prefWidth="200" showTickMarks="true"/>
-                <Label text="4x"/>
-            </HBox>
-
-            <HBox spacing="10" style="-fx-padding: 0 10;">
-                <Button fx:id="playBtn"  text="▶ Play"/>
-                <Button fx:id="pauseBtn" text="⏸ Pause"/>
-                <Button fx:id="stepBtn"  text="⏭ Step"/>
-                <Button fx:id="resetBtn" text="↺ Reset"/>
-            </HBox>
-
-            <!-- VISUALIZER PANELS (filled dynamically at runtime) -->
-            <HBox fx:id="visualizerBox" spacing="15" style="-fx-padding: 10;">
-            </HBox>
-
+        <!-- Array Type -->
+        <VBox styleClass="control-group" spacing="4">
+            <Label text="ARRAY TYPE" styleClass="control-label"/>
+            <ComboBox fx:id="vizTypeCombo" styleClass="combo-input" prefWidth="140"/>
         </VBox>
-    </content>
-</ScrollPane>
+
+        <!-- Size -->
+        <VBox styleClass="control-group" spacing="4">
+            <Label text="SIZE (MAX 100)" styleClass="control-label"/>
+            <TextField fx:id="vizSizeField" styleClass="text-input"
+                       promptText="40" prefWidth="80"/>
+        </VBox>
+
+        <Separator orientation="VERTICAL" styleClass="bar-divider"/>
+
+        <!-- Algorithms -->
+        <VBox styleClass="control-group" spacing="4">
+            <Label text="ALGORITHMS" styleClass="control-label"/>
+            <HBox spacing="8" alignment="CENTER_LEFT">
+                <CheckBox fx:id="vizCheckBubble"    text="BubbleSort"    styleClass="algo-chip"/>
+                <CheckBox fx:id="vizCheckInsertion" text="InsertionSort" styleClass="algo-chip"/>
+                <CheckBox fx:id="vizCheckSelection" text="SelectionSort" styleClass="algo-chip"/>
+                <CheckBox fx:id="vizCheckMerge"     text="MergeSort"     styleClass="algo-chip"/>
+                <CheckBox fx:id="vizCheckQuick"     text="QuickSort"     styleClass="algo-chip"/>
+                <CheckBox fx:id="vizCheckHeap"      text="HeapSort"      styleClass="algo-chip"/>
+            </HBox>
+        </VBox>
+
+        <Separator orientation="VERTICAL" styleClass="bar-divider"/>
+
+        <Button fx:id="addVisualizerBtn" text="+ Add Visualizer"
+                styleClass="btn-primary" onAction="#handleAddVisualizer"/>
+
+    </HBox>
+
+    <!-- ── PLAYBACK BAR ── -->
+    <HBox styleClass="playback-bar" alignment="CENTER_LEFT" spacing="12">
+
+        <Label text="0.5×" styleClass="speed-label"/>
+        <Slider fx:id="speedSlider" min="0.5" max="4.0" value="1.0"
+                prefWidth="160" styleClass="speed-slider"/>
+        <Label text="4×" styleClass="speed-label"/>
+
+        <Separator orientation="VERTICAL" styleClass="bar-divider"/>
+
+        <Button fx:id="playBtn"  text="▶  Play"   styleClass="btn-primary" onAction="#handlePlay"/>
+        <Button fx:id="pauseBtn" text="⏸  Pause"  styleClass="btn-warning" onAction="#handlePause"/>
+        <Button fx:id="stepBtn"  text="⏭  Step"   styleClass="btn-ghost"   onAction="#handleStep"/>
+        <Button fx:id="resetBtn" text="↺  Reset"  styleClass="btn-danger"  onAction="#handleReset"/>
+
+    </HBox>
+
+    <!-- VISUALIZER PANELS -->
+    <ScrollPane fitToHeight="true" fitToWidth="true"
+                VBox.vgrow="ALWAYS" styleClass="viz-scroll">
+        <content>
+            <HBox fx:id="visualizerBox" spacing="16"
+                  styleClass="viz-panels-container">
+                <padding><Insets top="16" right="20" bottom="16" left="20"/></padding>
+            </HBox>
+        </content>
+    </ScrollPane>
+
+</VBox>

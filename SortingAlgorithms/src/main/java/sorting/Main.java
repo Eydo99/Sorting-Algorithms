@@ -12,6 +12,8 @@ public class Main extends Application {
     public void start(Stage stage) throws Exception {
         Parent root = FXMLLoader.load(getClass().getResource("/fxml/Main.fxml"));
         Scene scene = new Scene(root, 800, 650);
+        scene.getStylesheets().add(
+                getClass().getResource("/css/style.css").toExternalForm());
         stage.setTitle("Sorting Algorithms");
         stage.setScene(scene);
         stage.show();

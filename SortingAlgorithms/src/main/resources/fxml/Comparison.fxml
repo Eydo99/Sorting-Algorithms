@@ -2,111 +2,147 @@
 
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
 
-<ScrollPane fitToWidth="true"
-            xmlns="http://javafx.com/javafx"
-            xmlns:fx="http://javafx.com/fxml"
-            fx:controller="sorting.ui.ComparisonController">
-    <content>
-        <VBox spacing="10" style="-fx-padding: 10;">
+<VBox xmlns="http://javafx.com/javafx"
+       xmlns:fx="http://javafx.com/fxml"
+       fx:controller="sorting.ui.ComparisonController"
+       styleClass="root-container"
+       stylesheets="@/css/style.css">
 
-            <!-- ADD TASK SECTION -->
-            <TitledPane text="Add Task" animated="false" collapsible="false">
-                <content>
-                    <GridPane hgap="10" vgap="8" style="-fx-padding: 10;">
-                        <columnConstraints>
-                            <ColumnConstraints minWidth="100"/>
-                            <ColumnConstraints minWidth="150"/>
-                            <ColumnConstraints minWidth="60"/>
-                            <ColumnConstraints minWidth="150"/>
-                        </columnConstraints>
+    <!-- ── CONTROL BAR ── -->
+    <HBox styleClass="control-bar" alignment="CENTER_LEFT" spacing="16">
 
-                        <Label text="Algorithm:" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
-                        <ComboBox fx:id="algorithmCombo" prefWidth="150"
-                                  GridPane.rowIndex="0" GridPane.columnIndex="1"/>
-
-                        <Label text="Runs:" GridPane.rowIndex="0" GridPane.columnIndex="2"/>
-                        <TextField fx:id="runsField" prefWidth="150"
-                                   GridPane.rowIndex="0" GridPane.columnIndex="3"/>
-
-                        <Label text="Array Size:" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
-                        <TextField fx:id="arraySizeField" prefWidth="150"
-                                   GridPane.rowIndex="1" GridPane.columnIndex="1"/>
-
-                        <Label text="Array Type:" GridPane.rowIndex="2" GridPane.columnIndex="0"/>
-                        <ComboBox fx:id="arrayTypeCombo" prefWidth="150"
-                                  GridPane.rowIndex="2" GridPane.columnIndex="1"/>
-
-                        <Label text="From File:" GridPane.rowIndex="3" GridPane.columnIndex="0"/>
-                        <CheckBox fx:id="fromFileCheck"
-                                  GridPane.rowIndex="3" GridPane.columnIndex="1"/>
-
-                        <Label text="File Name:" GridPane.rowIndex="4" GridPane.columnIndex="0"/>
-                        <TextField fx:id="fileNameField" prefWidth="150" disable="true"
-                                   GridPane.rowIndex="4" GridPane.columnIndex="1"/>
-
-                        <Button fx:id="addTaskBtn" text="Add Task"
-                                GridPane.rowIndex="5" GridPane.columnIndex="1"/>
-                    </GridPane>
-                </content>
-            </TitledPane>
-
-            <!-- PENDING TASKS SECTION -->
-            <TitledPane text="Pending Tasks" animated="false" collapsible="false">
-                <content>
-                    <VBox spacing="8" style="-fx-padding: 10;">
-                        <TableView fx:id="pendingTasksTable" prefHeight="150">
-                            <columns>
-                                <TableColumn fx:id="pendingAlgoCol"    text="Algorithm" prefWidth="120"/>
-                                <TableColumn fx:id="pendingSizeCol"    text="Size"      prefWidth="80"/>
-                                <TableColumn fx:id="pendingTypeCol"    text="Type"      prefWidth="120"/>
-                                <TableColumn fx:id="pendingRunsCol"    text="Runs"      prefWidth="80"/>
-                                <TableColumn fx:id="pendingFromFileCol" text="FromFile" prefWidth="80"/>
-                            </columns>
-                        </TableView>
-
-                        <HBox spacing="10">
-                            <Button fx:id="runSequentialBtn" text="Run All Sequential"/>
-                            <Button fx:id="runParallelBtn"   text="Run All Parallel"/>
-                            <Button fx:id="exportCsvBtn"     text="Export CSV"/>
-                            <Button fx:id="clearBtn"         text="Clear"/>
-                        </HBox>
-                    </VBox>
-                </content>
-            </TitledPane>
-
-            <!-- RESULTS SECTION -->
-            <TitledPane text="Results" animated="false" collapsible="false">
-                <content>
-                    <VBox spacing="8" style="-fx-padding: 10;">
-                        <TableView fx:id="resultsTable" prefHeight="200">
-                            <columns>
-                                <TableColumn fx:id="resultAlgoCol"   text="Algorithm"    prefWidth="110"/>
-                                <TableColumn fx:id="resultSizeCol"   text="Size"         prefWidth="60"/>
-                                <TableColumn fx:id="resultTypeCol"   text="Type"         prefWidth="100"/>
-                                <TableColumn fx:id="resultRunCol"    text="Run"          prefWidth="40"/>
-                                <TableColumn fx:id="resultTimeCol"   text="Time(ns)"     prefWidth="80"/>
-                                <TableColumn fx:id="resultCompCol"   text="Comparisons"  prefWidth="100"/>
-                                <TableColumn fx:id="resultInterCol"  text="Interchanges" prefWidth="100"/>
-                            </columns>
-                        </TableView>
-
-                        <TitledPane text="Summary" animated="false" collapsible="false">
-                            <content>
-                                <GridPane hgap="20" vgap="6" style="-fx-padding: 8;">
-                                    <Label text="Avg:" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
-                                    <Label fx:id="avgLabel" text="--" GridPane.rowIndex="0" GridPane.columnIndex="1"/>
-                                    <Label text="Min:" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
-                                    <Label fx:id="minLabel" text="--" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
-                                    <Label text="Max:" GridPane.rowIndex="2" GridPane.columnIndex="0"/>
-                                    <Label fx:id="maxLabel" text="--" GridPane.rowIndex="2" GridPane.columnIndex="1"/>
-                                </GridPane>
-                            </content>
-                        </TitledPane>
-                    </VBox>
-                </content>
-            </TitledPane>
-
+        <!-- Array Type -->
+        <VBox styleClass="control-group" spacing="4">
+            <Label text="ARRAY TYPE" styleClass="control-label"/>
+            <ComboBox fx:id="arrayTypeCombo" styleClass="combo-input" prefWidth="140"/>
         </VBox>
-    </content>
-</ScrollPane>
+
+        <!-- Size -->
+        <VBox styleClass="control-group" spacing="4">
+            <Label text="SIZE" styleClass="control-label"/>
+            <TextField fx:id="arraySizeField" styleClass="text-input"
+                       promptText="500" prefWidth="80"/>
+        </VBox>
+
+        <!-- Runs -->
+        <VBox styleClass="control-group" spacing="4">
+            <Label text="RUNS" styleClass="control-label"/>
+            <TextField fx:id="runsField" styleClass="text-input"
+                       promptText="5" prefWidth="80"/>
+        </VBox>
+
+        <Separator orientation="VERTICAL" styleClass="bar-divider"/>
+
+        <!-- Algorithms -->
+        <VBox styleClass="control-group" spacing="4">
+            <Label text="ALGORITHMS" styleClass="control-label"/>
+            <HBox spacing="8" alignment="CENTER_LEFT">
+                <CheckBox fx:id="checkBubble"    text="BubbleSort"    styleClass="algo-chip"/>
+                <CheckBox fx:id="checkInsertion" text="InsertionSort" styleClass="algo-chip"/>
+                <CheckBox fx:id="checkSelection" text="SelectionSort" styleClass="algo-chip"/>
+                <CheckBox fx:id="checkMerge"     text="MergeSort"     styleClass="algo-chip"/>
+                <CheckBox fx:id="checkQuick"     text="QuickSort"     styleClass="algo-chip"/>
+                <CheckBox fx:id="checkHeap"      text="HeapSort"      styleClass="algo-chip"/>
+            </HBox>
+        </VBox>
+
+        <Separator orientation="VERTICAL" styleClass="bar-divider"/>
+
+        <!-- From File -->
+        <VBox styleClass="control-group" spacing="4">
+            <Label text="FROM FILE" styleClass="control-label"/>
+            <HBox spacing="8" alignment="CENTER_LEFT">
+                <CheckBox fx:id="fromFileCheck" styleClass="algo-chip"/>
+                <TextField fx:id="fileNameField" styleClass="text-input"
+                           promptText="filename.txt" prefWidth="130" disable="true"/>
+            </HBox>
+        </VBox>
+
+        <!-- Action Buttons -->
+        <HBox spacing="8" alignment="CENTER_LEFT" HBox.hgrow="ALWAYS">
+            <HBox.margin>
+                <Insets left="16"/>
+            </HBox.margin>
+            <Button fx:id="runSequentialBtn" text="▶  Run Sequential"
+                    styleClass="btn-primary" onAction="#handleRunSequential"/>
+            <Button fx:id="runParallelBtn"   text="⚡  Run Parallel"
+                    styleClass="btn-accent"  onAction="#handleRunParallel"/>
+            <Button fx:id="exportCsvBtn"     text="⬇  Export CSV"
+                    styleClass="btn-ghost"   onAction="#handleExportCsv"/>
+            <Button fx:id="clearBtn"         text="✕  Clear"
+                    styleClass="btn-danger"  onAction="#handleClear"/>
+        </HBox>
+
+    </HBox>
+
+    <!-- ── RESULTS TABLE ── -->
+    <VBox VBox.vgrow="ALWAYS" styleClass="table-area" spacing="10">
+        <VBox.margin><Insets top="16" right="20" bottom="0" left="20"/></VBox.margin>
+
+        <HBox alignment="CENTER_LEFT" spacing="10">
+            <Label text="RESULTS" styleClass="section-label"/>
+            <Label fx:id="resultCountLabel" text="" styleClass="badge"/>
+        </HBox>
+
+        <TableView fx:id="resultsTable" VBox.vgrow="ALWAYS"
+                   styleClass="data-table">
+            <columns>
+                <TableColumn fx:id="resultAlgoCol"  text="Algorithm"    prefWidth="120"/>
+                <TableColumn fx:id="resultSizeCol"  text="Size"         prefWidth="70"/>
+                <TableColumn fx:id="resultTypeCol"  text="Type"         prefWidth="110"/>
+                <TableColumn fx:id="resultRunCol"   text="Run"          prefWidth="50"/>
+                <TableColumn fx:id="resultTimeCol"  text="Time (ns)"    prefWidth="100"/>
+                <TableColumn fx:id="resultCompCol"  text="Comparisons"  prefWidth="110"/>
+                <TableColumn fx:id="resultInterCol" text="Interchanges" prefWidth="110"/>
+            </columns>
+            <placeholder>
+                <Label text="No results yet — add tasks and run" styleClass="table-placeholder"/>
+            </placeholder>
+        </TableView>
+    </VBox>
+
+    <!-- ── PENDING TASKS ── -->
+    <VBox styleClass="table-area" spacing="10">
+        <VBox.margin><Insets top="12" right="20" bottom="0" left="20"/></VBox.margin>
+
+        <Label text="PENDING TASKS" styleClass="section-label"/>
+
+        <TableView fx:id="pendingTasksTable" prefHeight="130"
+                   styleClass="data-table">
+            <columns>
+                <TableColumn fx:id="pendingAlgoCol"     text="Algorithm" prefWidth="120"/>
+                <TableColumn fx:id="pendingSizeCol"     text="Size"      prefWidth="80"/>
+                <TableColumn fx:id="pendingTypeCol"     text="Type"      prefWidth="120"/>
+                <TableColumn fx:id="pendingRunsCol"     text="Runs"      prefWidth="70"/>
+                <TableColumn fx:id="pendingFromFileCol" text="From File" prefWidth="90"/>
+            </columns>
+            <placeholder>
+                <Label text="No pending tasks" styleClass="table-placeholder"/>
+            </placeholder>
+        </TableView>
+    </VBox>
+
+    <!-- ── SUMMARY BAR ── -->
+    <HBox styleClass="summary-bar" alignment="CENTER_LEFT" spacing="32">
+        <VBox.margin><Insets top="12"/></VBox.margin>
+
+        <HBox spacing="8" alignment="CENTER_LEFT">
+            <Label text="AVG" styleClass="summary-label"/>
+            <Label fx:id="avgLabel" text="--" styleClass="summary-value-avg"/>
+        </HBox>
+
+        <HBox spacing="8" alignment="CENTER_LEFT">
+            <Label text="MIN" styleClass="summary-label"/>
+            <Label fx:id="minLabel" text="--" styleClass="summary-value-min"/>
+        </HBox>
+
+        <HBox spacing="8" alignment="CENTER_LEFT">
+            <Label text="MAX" styleClass="summary-label"/>
+            <Label fx:id="maxLabel" text="--" styleClass="summary-value-max"/>
+        </HBox>
+
+    </HBox>
+
+</VBox>
