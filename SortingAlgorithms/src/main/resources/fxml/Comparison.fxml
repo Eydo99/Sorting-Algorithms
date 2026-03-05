@@ -92,8 +92,8 @@
                 <TableColumn fx:id="resultSizeCol"  text="Size"         prefWidth="70"/>
                 <TableColumn fx:id="resultTypeCol"  text="Type"         prefWidth="100"/>
                 <TableColumn fx:id="resultMinRunTimeCol"   text="Min. Runtime(ns)"          prefWidth="50"/>
-                <TableColumn fx:id="resultMaxRunTimeCol"  text="Max. Runtime(ns"    prefWidth="100"/>
-                <TableColumn fx:id="resultAverageCol"  text="avg. Runtime(ns"    prefWidth="100"/>
+                <TableColumn fx:id="resultMaxRunTimeCol"  text="Max. Runtime (ns)"    prefWidth="100"/>
+                <TableColumn fx:id="resultAverageCol"  text="Avg. Runtime (ns)"    prefWidth="100"/>
                 <TableColumn fx:id="resultCompCol"  text="Comparisons"  prefWidth="110"/>
                 <TableColumn fx:id="resultInterCol" text="Interchanges" prefWidth="110"/>
             </columns>

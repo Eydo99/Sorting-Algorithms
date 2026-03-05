@@ -16,15 +16,14 @@ public class ParallelComparisonManager {
         tasks.add(task);
     }
 
-
-    public List<List<SortResult>> runAll()  {
+    public List<List<SortResult>> runAll() {
         List<Future<List<SortResult>>> futures = new ArrayList<>();
-        executor = Executors.newFixedThreadPool(tasks.size());
+        executor = Executors.newFixedThreadPool(Math.min(tasks.size(), Runtime.getRuntime().availableProcessors()));
 
         for (ComparisonTask task : tasks) {
-            Future<List<SortResult>> future= executor.submit(()->
-            {ComparisonRunner runner = new ComparisonRunner(task);
-               return  runner.run();
+            Future<List<SortResult>> future = executor.submit(() -> {
+                ComparisonRunner runner = new ComparisonRunner(task);
+                return runner.run();
             });
             futures.add(future);
         }
@@ -33,42 +32,15 @@ public class ParallelComparisonManager {
             try {
                 results.add(future.get());
             } catch (InterruptedException | ExecutionException e) {
-                System.out.println(e.getMessage());;
+                System.out.println(e.getMessage());
             }
         }
+        tasks.clear();
         return results;
     }
-    public  void shutdown() {
-         executor.shutdown();
-    }
 
-    public static void main(String[] args) {
-
-        ParallelComparisonManager manager = new ParallelComparisonManager();
-
-        // Add 6 different algorithm tasks
-        manager.addTask(new ComparisonTask("BubbleSort",  1000, ArrayType.RANDOM, 3, false, null));
-        manager.addTask(new ComparisonTask("SelectionSort", 1000, ArrayType.RANDOM, 3, false, null));
-        manager.addTask(new ComparisonTask("InsertionSort", 1000, ArrayType.RANDOM, 3, false, null));
-        manager.addTask(new ComparisonTask("MergeSort",   1000, ArrayType.RANDOM, 3, false, null));
-        manager.addTask(new ComparisonTask("HeapSort",    1000, ArrayType.RANDOM, 3, false, null));
-        manager.addTask(new ComparisonTask("QuickSort",   1000, ArrayType.RANDOM, 3, false, null));
-
-        // Run all in parallel
-        List<List<SortResult>> allResults = manager.runAll();
-        manager.shutdown();
-
-        // Print results
-        for(List<SortResult> results : allResults) {
-            System.out.println("=== " + results.get(0).getAlgorithmName() + " ===");
-            for(SortResult r : results) {
-                System.out.println("Run " + r.getRunNumber() +
-                        " | Time: " + r.getRuntimeNs() + "ns" +
-                        " | Comparisons: " + r.getComparisons() +
-                        " | Interchanges: " + r.getInterchanges());
-            }
-            System.out.println("---");
-        }
+    public void shutdown() {
+        executor.shutdown();
     }
 
 }

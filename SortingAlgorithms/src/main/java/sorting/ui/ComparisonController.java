@@ -19,62 +19,84 @@ import java.util.List;
 
 public class ComparisonController {
 
+    //
+    // // ── Data lists ───────────────────────────────────────────────
+    // private final ObservableList<ComparisonTask> pendingTasks =
+    // FXCollections.observableArrayList();
+    // private final ObservableList<SortResult> results =
+    // FXCollections.observableArrayList();
 
+    @FXML
+    private CheckBox checkBubble;
+    @FXML
+    private CheckBox checkInsertion;
+    @FXML
+    private CheckBox checkSelection;
+    @FXML
+    private CheckBox checkMerge;
+    @FXML
+    private CheckBox checkQuick;
+    @FXML
+    private CheckBox checkHeap;
 
-//
-//    // ── Data lists ───────────────────────────────────────────────
-//    private final ObservableList<ComparisonTask> pendingTasks =
-//            FXCollections.observableArrayList();
-//    private final ObservableList<SortResult> results =
-//            FXCollections.observableArrayList();
+    @FXML
+    private ComboBox<String> arrayTypeCombo;
+    @FXML
+    private TextField arraySizeField;
+    @FXML
+    private TextField runsField;
+    @FXML
+    private CheckBox fromFileField;
+    @FXML
+    private TextField fileNameField;
 
+    @FXML
+    private TableView<ComparisonSummary> resultsTable;
+    @FXML
+    private TableColumn<ComparisonSummary, String> resultAlgoCol;
+    @FXML
+    private TableColumn<ComparisonSummary, Integer> resultSizeCol;
+    @FXML
+    private TableColumn<ComparisonSummary, String> resultTypeCol;
+    @FXML
+    private TableColumn<ComparisonSummary, Long> resultMinRunTimeCol;
+    @FXML
+    private TableColumn<ComparisonSummary, Long> resultMaxRunTimeCol;
+    @FXML
+    private TableColumn<ComparisonSummary, Long> resultAverageCol;
+    @FXML
+    private TableColumn<ComparisonSummary, Long> resultCompCol;
+    @FXML
+    private TableColumn<ComparisonSummary, Long> resultInterCol;
 
-    @FXML private CheckBox checkBubble;
-    @FXML private CheckBox checkInsertion;
-    @FXML private CheckBox checkSelection;
-    @FXML private CheckBox checkMerge;
-    @FXML private CheckBox checkQuick;
-    @FXML private CheckBox checkHeap;;
+    @FXML
+    private TableView<ComparisonTask> pendingTasksTable;
+    @FXML
+    private TableColumn<ComparisonTask, String> pendingAlgoCol;
+    @FXML
+    private TableColumn<ComparisonTask, Integer> pendingRunsCol;
+    @FXML
+    private TableColumn<ComparisonTask, Integer> pendingSizeCol;
+    @FXML
+    private TableColumn<ComparisonTask, String> pendingTypeCol;
+    @FXML
+    private TableColumn<ComparisonTask, Boolean> pendingFromFileCol;
 
+    @FXML
+    private Label avgLabel;
+    @FXML
+    private Label minLabel;
+    @FXML
+    private Label maxLabel;
+    @FXML
+    private Label resultCountLabel;
 
-    @FXML private ComboBox<String> arrayTypeCombo;
-    @FXML private TextField arraySizeField;
-    @FXML private TextField runsField;
-    @FXML private CheckBox fromFileField;
-    @FXML private TextField fileNameField;
-
-    @FXML  private TableView<ComparisonSummary> resultsTable;
-    @FXML private TableColumn<ComparisonSummary, String> resultAlgoCol;
-    @FXML private TableColumn<ComparisonSummary, Integer> resultSizeCol;
-    @FXML private TableColumn<ComparisonSummary, String> resultTypeCol;
-    @FXML private TableColumn<ComparisonSummary, Long> resultMinRunTimeCol;
-    @FXML private TableColumn<ComparisonSummary, Long> resultMaxRunTimeCol;
-    @FXML private TableColumn<ComparisonSummary, Long> resultAverageCol;
-    @FXML private TableColumn<ComparisonSummary, Long> resultCompCol;
-    @FXML private TableColumn<ComparisonSummary, Long> resultInterCol;
-
-
-    @FXML private TableView<ComparisonTask> pendingTasksTable;
-    @FXML private TableColumn<ComparisonTask, String> pendingAlgoCol;
-    @FXML private TableColumn<ComparisonTask, Integer> pendingRunsCol;
-    @FXML private TableColumn<ComparisonTask, Integer> pendingSizeCol;
-    @FXML private TableColumn<ComparisonTask, String> pendingTypeCol;
-    @FXML private TableColumn<ComparisonTask, Boolean> pendingFromFileCol;
-
-    @FXML private Label avgLabel;
-    @FXML private Label minLabel;
-    @FXML private Label maxLabel;
-    @FXML private Label resultCountLabel;
-
-     private final ObservableList<ComparisonTask> pendingTasks = FXCollections.observableArrayList();
-     private final ObservableList<ComparisonSummary> results = FXCollections.observableArrayList();
-
-
-
+    private final ObservableList<ComparisonTask> pendingTasks = FXCollections.observableArrayList();
+    private final ObservableList<ComparisonSummary> results = FXCollections.observableArrayList();
 
     @FXML
     public void initialize() {
-        arrayTypeCombo.getItems().setAll("SORTED","INVERSELY_SORTED","RANDOM");
+        arrayTypeCombo.getItems().setAll("SORTED", "INVERSELY_SORTED", "RANDOM");
         arrayTypeCombo.setValue("RANDOM");
 
         fromFileField.setOnAction((event) -> {
@@ -90,8 +112,7 @@ public class ComparisonController {
         resultCompCol.setCellValueFactory(new PropertyValueFactory<>("comparisons"));
         resultInterCol.setCellValueFactory(new PropertyValueFactory<>("interchanges"));
         resultsTable.setItems(results);
-        resultsTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY_FLEX_LAST_COLUMN); //looked for it
-
+        resultsTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY_FLEX_LAST_COLUMN); // looked for it
 
         pendingAlgoCol.setCellValueFactory(new PropertyValueFactory<>("algorithmName"));
         pendingRunsCol.setCellValueFactory(new PropertyValueFactory<>("noOfRuns"));
@@ -101,21 +122,17 @@ public class ComparisonController {
         pendingTasksTable.setItems(pendingTasks);
         pendingTasksTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY_FLEX_LAST_COLUMN);
 
-
         // Update result count badge whenever results change
-        results.addListener((javafx.collections.ListChangeListener<ComparisonSummary>) c ->
-                resultCountLabel.setText(results.size() + " rows")
-        );
-
+        results.addListener((javafx.collections.ListChangeListener<ComparisonSummary>) c -> resultCountLabel
+                .setText(results.size() + " rows"));
 
     }
 
-
     @FXML
-    private void handleRunSequential()
-    {
+    private void handleRunSequential() {
         List<ComparisonTask> tasks = buildTasksFromForm();
-        if(tasks == null) return;
+        if (tasks == null)
+            return;
 
         results.clear();
 
@@ -123,15 +140,14 @@ public class ComparisonController {
             @Override
             protected Void call() {
 
-                for(ComparisonTask task : tasks)
-                {
-                    ComparisonRunner runner = new ComparisonRunner(task);
+                for (ComparisonTask t : tasks) {
+                    ComparisonRunner runner = new ComparisonRunner(t);
                     List<SortResult> result = runner.run();
                     ComparisonSummary summary = ComparisonSummary.getSummary(result);
 
                     Platform.runLater(() -> {
                         results.add(summary);
-                        pendingTasks.remove(task);
+                        pendingTasks.remove(t);
                     });
                 }
 
@@ -145,10 +161,10 @@ public class ComparisonController {
     }
 
     @FXML
-    private void handleRunParallel()
-    {
+    private void handleRunParallel() {
         List<ComparisonTask> tasks = buildTasksFromForm();
-        if(tasks == null) return;
+        if (tasks == null)
+            return;
 
         results.clear();
 
@@ -164,8 +180,7 @@ public class ComparisonController {
                 List<List<SortResult>> allResults = manager.runAll();
                 manager.shutdown();
 
-                for(List<SortResult> r : allResults)
-                {
+                for (List<SortResult> r : allResults) {
                     ComparisonSummary summary = ComparisonSummary.getSummary(r);
 
                     Platform.runLater(() -> results.add(summary));
@@ -196,19 +211,16 @@ public class ComparisonController {
         FileChooser chooser = new FileChooser();
         chooser.setTitle("Save CSV");
         chooser.getExtensionFilters().add(
-                new FileChooser.ExtensionFilter("CSV Files", "*.csv")
-        );
+                new FileChooser.ExtensionFilter("CSV Files", "*.csv"));
 
         File file = chooser.showSaveDialog(
-                resultsTable.getScene().getWindow()
-        );
+                resultsTable.getScene().getWindow());
 
         if (file != null) {
             List<ComparisonSummary> summaries = new ArrayList<>(results);
             CSVExporter.export(summaries, file.getAbsolutePath());
         }
     }
-
 
     @FXML
     private void handleClear() {
@@ -220,79 +232,77 @@ public class ComparisonController {
         resultCountLabel.setText("");
     }
 
-
-
     private List<ComparisonTask> buildTasksFromForm() {
-        List<String> selectedAlgorithms=getSelectedAlgorithms();
-        if(selectedAlgorithms.isEmpty())
-        {
+        List<String> selectedAlgorithms = getSelectedAlgorithms();
+        if (selectedAlgorithms.isEmpty()) {
             showAlert("No algorithms selected.");
             return null;
         }
 
         int size;
-        try
-        {
-            size=Integer.parseInt(arraySizeField.getText().trim());
-            if(size<1)
-            {
+        try {
+            size = Integer.parseInt(arraySizeField.getText().trim());
+            if (size < 1) {
                 showAlert("Please enter a number greater than 1.");
                 return null;
             }
-        }
-        catch (NumberFormatException e)
-        {
+        } catch (NumberFormatException e) {
             showAlert("Please enter an integer");
             return null;
         }
 
         int runs;
-        try
-        {
-            runs=Integer.parseInt(runsField.getText().trim());
-            if(runs<1)
-            {
+        try {
+            runs = Integer.parseInt(runsField.getText().trim());
+            if (runs < 1) {
                 showAlert("Please enter a number greater than 1.");
                 return null;
             }
-        }catch (NumberFormatException e)
-        {
+        } catch (NumberFormatException e) {
             showAlert("Please enter an integer");
             return null;
         }
 
-        boolean isFromFIle=fromFileField.isSelected();
-        String fileName= (isFromFIle) ? fileNameField.getText().trim() : "";
-        if(isFromFIle && fileName.isEmpty())
-        {
+        boolean isFromFIle = fromFileField.isSelected();
+        String fileName = (isFromFIle) ? fileNameField.getText().trim() : "";
+        if (isFromFIle && fileName.isEmpty()) {
             showAlert("Please enter a file name");
             return null;
         }
 
-        ArrayType arrayType=ArrayType.valueOf(arrayTypeCombo.getValue().trim().toUpperCase());
+        ArrayType arrayType = ArrayType.valueOf(arrayTypeCombo.getValue().trim().toUpperCase());
         List<ComparisonTask> tasks = new ArrayList<>();
 
-        for(String selectedAlgorithm : selectedAlgorithms)
-        {
-            tasks.add(new ComparisonTask(selectedAlgorithm,size,arrayType,runs,isFromFIle,fileName));
+        for (String selectedAlgorithm : selectedAlgorithms) {
+            tasks.add(new ComparisonTask(selectedAlgorithm, size, arrayType, runs, isFromFIle, fileName));
         }
 
         pendingTasks.addAll(tasks);
         return tasks;
     }
 
-
     private List<String> getSelectedAlgorithms() {
         List<String> algorithms = new ArrayList<>();
-        if(checkBubble.isSelected()) { algorithms.add("BubbleSort"); }
-        if(checkInsertion.isSelected()) { algorithms.add("InsertionSort"); }
-        if(checkSelection.isSelected()) { algorithms.add("SelectionSort"); }
-        if(checkQuick.isSelected()) { algorithms.add("QuickSort"); }
-        if(checkMerge.isSelected()) { algorithms.add("MergeSort"); }
-        if(checkHeap.isSelected()) { algorithms.add("HeapSort"); }
+        if (checkBubble.isSelected()) {
+            algorithms.add("BubbleSort");
+        }
+        if (checkInsertion.isSelected()) {
+            algorithms.add("InsertionSort");
+        }
+        if (checkSelection.isSelected()) {
+            algorithms.add("SelectionSort");
+        }
+        if (checkQuick.isSelected()) {
+            algorithms.add("QuickSort");
+        }
+        if (checkMerge.isSelected()) {
+            algorithms.add("MergeSort");
+        }
+        if (checkHeap.isSelected()) {
+            algorithms.add("HeapSort");
+        }
         return algorithms;
     }
-
 
     private void updateSummary() {
         long avg = results.stream().mapToLong(ComparisonSummary::getAvgRuntimeNs).sum() / results.size();
