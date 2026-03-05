@@ -54,7 +54,7 @@
         <VBox styleClass="control-group" spacing="4">
             <Label text="FROM FILE" styleClass="control-label"/>
             <HBox spacing="8" alignment="CENTER_LEFT">
-                <CheckBox fx:id="fromFileCheck" styleClass="algo-chip"/>
+                <CheckBox fx:id="fromFileField" styleClass="algo-chip"/>
                 <TextField fx:id="fileNameField" styleClass="text-input"
                            promptText="filename.txt" prefWidth="130" disable="true"/>
             </HBox>
@@ -79,11 +79,11 @@
 
     <!-- ── RESULTS TABLE ── -->
     <VBox VBox.vgrow="ALWAYS" styleClass="table-area" spacing="10">
-        <VBox.margin><Insets top="16" right="20" bottom="0" left="20"/></VBox.margin>
+        <VBox.margin><Insets top="16" right="20" left="20"/></VBox.margin>
 
         <HBox alignment="CENTER_LEFT" spacing="10">
             <Label text="RESULTS" styleClass="section-label"/>
-            <Label fx:id="resultCountLabel" text="" styleClass="badge"/>
+            <Label fx:id="resultCountLabel" styleClass="badge"/>
         </HBox>
 
         <TableView fx:id="resultsTable" VBox.vgrow="ALWAYS"
@@ -91,9 +91,10 @@
             <columns>
                 <TableColumn fx:id="resultAlgoCol"  text="Algorithm"    prefWidth="120"/>
                 <TableColumn fx:id="resultSizeCol"  text="Size"         prefWidth="70"/>
-                <TableColumn fx:id="resultTypeCol"  text="Type"         prefWidth="110"/>
-                <TableColumn fx:id="resultRunCol"   text="Run"          prefWidth="50"/>
-                <TableColumn fx:id="resultTimeCol"  text="Time (ns)"    prefWidth="100"/>
+                <TableColumn fx:id="resultTypeCol"  text="Type"         prefWidth="100"/>
+                <TableColumn fx:id="resultMinRunTimeCol"   text="Min. Runtime(ns)"          prefWidth="50"/>
+                <TableColumn fx:id="resultMaxRunTimeCol"  text="Max. Runtime(ns"    prefWidth="100"/>
+                <TableColumn fx:id="resultAverageCol"  text="avg. Runtime(ns"    prefWidth="100"/>
                 <TableColumn fx:id="resultCompCol"  text="Comparisons"  prefWidth="110"/>
                 <TableColumn fx:id="resultInterCol" text="Interchanges" prefWidth="110"/>
             </columns>
@@ -105,7 +106,7 @@
 
     <!-- ── PENDING TASKS ── -->
     <VBox styleClass="table-area" spacing="10">
-        <VBox.margin><Insets top="12" right="20" bottom="0" left="20"/></VBox.margin>
+        <VBox.margin><Insets top="12" right="20" left="20"/></VBox.margin>
 
         <Label text="PENDING TASKS" styleClass="section-label"/>
 
@@ -113,7 +114,7 @@
                    styleClass="data-table">
             <columns>
                 <TableColumn fx:id="pendingAlgoCol"     text="Algorithm" prefWidth="120"/>
-                <TableColumn fx:id="pendingSizeCol"     text="Size"      prefWidth="80"/>
+                <TableColumn fx:id="pendingSizeCol"     text="Size"/>
                 <TableColumn fx:id="pendingTypeCol"     text="Type"      prefWidth="120"/>
                 <TableColumn fx:id="pendingRunsCol"     text="Runs"      prefWidth="70"/>
                 <TableColumn fx:id="pendingFromFileCol" text="From File" prefWidth="90"/>

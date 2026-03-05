@@ -3,12 +3,12 @@ package sorting.model;
 
 
 public class ComparisonTask {
-  private String algorithmName;
-  private int arraySize;
-  private int noOfRuns;
-  private ArrayType arrayType;
-  private boolean fromFile;
-  private String fileName;
+  private final String algorithmName;
+  private final int arraySize;
+  private final int noOfRuns;
+  private final ArrayType arrayType;
+  private final boolean fromFile;
+  private final String fileName;
 
   public ComparisonTask(String algorithmName, int arraySize, ArrayType arrayType,int noOfRuns, boolean fromFile, String fileName) {
     this.algorithmName = algorithmName;

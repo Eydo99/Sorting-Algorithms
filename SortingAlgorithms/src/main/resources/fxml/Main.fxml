@@ -7,6 +7,7 @@
 
 <BorderPane xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
+            stylesheets="@/css/style.css"
             prefHeight="650.0" prefWidth="800.0">
     <center>
         <TabPane tabClosingPolicy="UNAVAILABLE">

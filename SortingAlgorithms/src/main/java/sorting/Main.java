@@ -10,12 +10,15 @@ public class Main extends Application {
 
     @Override
     public void start(Stage stage) throws Exception {
-        Parent root = FXMLLoader.load(getClass().getResource("/fxml/Main.fxml"));
-        Scene scene = new Scene(root, 800, 650);
-        scene.getStylesheets().add(
-                getClass().getResource("/css/style.css").toExternalForm());
-        stage.setTitle("Sorting Algorithms");
+        FXMLLoader loader = new FXMLLoader(
+                getClass().getResource("/fxml/Main.fxml")
+        );
+        Parent root = loader.load();
+        System.out.println("Root type: " + root.getClass().getName());
+        Scene scene = new Scene(root);
+        stage.setTitle("SortLab — Algorithm Analyzer");
         stage.setScene(scene);
+        stage.setMaximized(true);
         stage.show();
     }
 

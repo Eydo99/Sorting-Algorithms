@@ -1,46 +1,17 @@
 /* ================================================================
    SortLab — Carbon Dark Theme
-   Organized into sections for easy editing
    ================================================================ */
 
 
-/* ── 1. DESIGN TOKENS (change colors here only) ──────────────── */
+/* ── 1. ROOT ─────────────────────────────────────────────────── */
 .root-container {
-    /* Backgrounds */
-    -bg:            #13141a;
-    -surface:       #1c1e2a;
-    -surface2:      #22253a;
-
-    /* Borders */
-    -border:        #2a2d3e;
-    -border2:       #353850;
-
-    /* Brand colors */
-    -primary:       #4f8ef7;
-    -accent:        #00d4aa;
-    -danger:        #ff5c6a;
-    -warning:       #ffb347;
-
-    /* Text */
-    -text1:         #e8eaf0;
-    -text2:         #9ba3be;
-    -text3:         #5a6180;
-
-    /* Fonts */
     -fx-font-family: "JetBrains Mono", "Consolas", "Courier New", monospace;
     -fx-font-size:   13px;
-
-    /* Apply background */
     -fx-background-color: #13141a;
 }
 
 
 /* ── 2. LAYOUT CONTAINERS ────────────────────────────────────── */
-
-.root-container {
-    -fx-background-color: #13141a;
-}
-
 .scroll-pane,
 .scroll-pane > .viewport,
 .scroll-pane > .corner {
@@ -60,7 +31,6 @@
 
 
 /* ── 3. TAB PANE ─────────────────────────────────────────────── */
-
 .tab-pane,
 .tab-pane > .tab-content-area {
     -fx-background-color: #13141a;
@@ -81,8 +51,7 @@
     -fx-padding:          12 24 12 24;
 }
 
-.tab-pane > .tab-header-area > .headers-region > .tab
-> .tab-container > .tab-label {
+.tab-pane > .tab-header-area > .headers-region > .tab > .tab-container > .tab-label {
     -fx-text-fill:   #5a6180;
     -fx-font-weight: 600;
     -fx-font-size:   13px;
@@ -94,19 +63,16 @@
     -fx-border-width:     0 0 2 0;
 }
 
-.tab-pane > .tab-header-area > .headers-region > .tab:selected
-> .tab-container > .tab-label {
+.tab-pane > .tab-header-area > .headers-region > .tab:selected > .tab-container > .tab-label {
     -fx-text-fill: #4f8ef7;
 }
 
-.tab-pane > .tab-header-area > .headers-region > .tab:hover
-> .tab-container > .tab-label {
+.tab-pane > .tab-header-area > .headers-region > .tab:hover > .tab-container > .tab-label {
     -fx-text-fill: #9ba3be;
 }
 
 
 /* ── 4. CONTROL BAR ──────────────────────────────────────────── */
-
 .control-bar {
     -fx-background-color: #1c1e2a;
     -fx-border-color:     transparent transparent #2a2d3e transparent;
@@ -140,7 +106,6 @@
 
 
 /* ── 5. INPUTS ───────────────────────────────────────────────── */
-
 .text-input {
     -fx-background-color:  #22253a;
     -fx-text-fill:         #e8eaf0;
@@ -172,7 +137,7 @@
 }
 
 .combo-input .arrow-button {
-    -fx-background-color: #2a2d3e;
+    -fx-background-color:  #2a2d3e;
     -fx-background-radius: 0 6 6 0;
 }
 
@@ -203,7 +168,6 @@
 
 
 /* ── 6. ALGO CHIP CHECKBOXES ─────────────────────────────────── */
-
 .algo-chip {
     -fx-background-color:  #22253a;
     -fx-border-color:      #2a2d3e;
@@ -240,7 +204,7 @@
 }
 
 .algo-chip:selected {
-    -fx-background-color: rgba(79, 142, 247, 0.15);
+    -fx-background-color: #22253a;
     -fx-border-color:     #4f8ef7;
     -fx-text-fill:        #4f8ef7;
 }
@@ -255,7 +219,6 @@
 
 
 /* ── 7. BUTTONS ──────────────────────────────────────────────── */
-
 .btn-primary {
     -fx-background-color:  #4f8ef7;
     -fx-text-fill:         #ffffff;
@@ -311,7 +274,7 @@
 .btn-danger {
     -fx-background-color:  transparent;
     -fx-text-fill:         #ff5c6a;
-    -fx-border-color:      rgba(255, 92, 106, 0.3);
+    -fx-border-color:      #ff5c6a;
     -fx-border-width:      1;
     -fx-border-radius:     6;
     -fx-background-radius: 6;
@@ -320,14 +283,14 @@
 }
 
 .btn-danger:hover {
-    -fx-background-color: rgba(255, 92, 106, 0.1);
+    -fx-background-color: #22253a;
     -fx-border-color:     #ff5c6a;
 }
 
 .btn-warning {
     -fx-background-color:  transparent;
     -fx-text-fill:         #ffb347;
-    -fx-border-color:      rgba(255, 179, 71, 0.3);
+    -fx-border-color:      #ffb347;
     -fx-border-width:      1;
     -fx-border-radius:     6;
     -fx-background-radius: 6;
@@ -336,13 +299,12 @@
 }
 
 .btn-warning:hover {
-    -fx-background-color: rgba(255, 179, 71, 0.1);
+    -fx-background-color: #22253a;
     -fx-border-color:     #ffb347;
 }
 
 
 /* ── 8. TABLE ────────────────────────────────────────────────── */
-
 .table-area {
     -fx-background-color: #13141a;
 }
@@ -396,7 +358,7 @@
 }
 
 .data-table .table-row-cell:selected {
-    -fx-background-color: rgba(79, 142, 247, 0.15);
+    -fx-background-color: #22253a;
 }
 
 .data-table .table-cell {
@@ -418,7 +380,6 @@
 
 
 /* ── 9. SUMMARY BAR ──────────────────────────────────────────── */
-
 .summary-bar {
     -fx-background-color: #1c1e2a;
     -fx-border-color:     #2a2d3e transparent transparent transparent;
@@ -457,7 +418,7 @@
 }
 
 .badge {
-    -fx-background-color:  rgba(79, 142, 247, 0.15);
+    -fx-background-color:  #22253a;
     -fx-text-fill:         #4f8ef7;
     -fx-border-radius:     4;
     -fx-background-radius: 4;
@@ -468,7 +429,6 @@
 
 
 /* ── 10. SLIDER ──────────────────────────────────────────────── */
-
 .speed-label {
     -fx-text-fill: #5a6180;
     -fx-font-size: 11px;
@@ -497,7 +457,6 @@
 
 
 /* ── 11. SCROLLBAR ───────────────────────────────────────────── */
-
 .scroll-bar {
     -fx-background-color: #13141a;
 }
@@ -530,7 +489,6 @@
 
 
 /* ── 12. VISUALIZATION PANELS ────────────────────────────────── */
-
 .viz-panel {
     -fx-background-color:  #1c1e2a;
     -fx-border-color:      #2a2d3e;
@@ -563,10 +521,10 @@
 }
 
 .viz-stats-bar {
-    -fx-background-color: #22253a;
-    -fx-border-color:     #2a2d3e transparent transparent transparent;
-    -fx-border-width:     1 0 0 0;
-    -fx-padding:          10 16 10 16;
+    -fx-background-color:  #22253a;
+    -fx-border-color:      #2a2d3e transparent transparent transparent;
+    -fx-border-width:      1 0 0 0;
+    -fx-padding:           10 16 10 16;
     -fx-background-radius: 0 0 10 10;
 }
 

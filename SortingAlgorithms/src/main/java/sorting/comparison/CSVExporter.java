@@ -15,49 +15,30 @@ public class CSVExporter {
 
     private CSVExporter() {}
 
-    public static void export(List<SortResult> results, ComparisonSummary summary, String filePath) {
+    public static void export(List<ComparisonSummary> summaries, String filePath) {
 
         new File("data/output").mkdirs();
 
-        try (PrintWriter writer = new PrintWriter(new FileWriter(filePath, true))) {
+        try (PrintWriter writer = new PrintWriter(new FileWriter(filePath))) {
 
-            // write header only if file is new/empty
-            writer.println("Algorithm      ArraySize       ArrayType      RunNumber" +
-                    "    RuntimeNs      Comparisons       Interchanges");
+            // Header
+            writer.println("Algorithm,ArraySize,ArrayType,AvgRuntimeNs,MinRuntimeNs,MaxRuntimeNs");
 
-            // write one row per result
-            for(SortResult r : results) {
+            // write one row per summary
+            for (ComparisonSummary s : summaries) {
+
                 writer.println(
-                        r.getAlgorithmName() + "         " +
-                                r.getArraySize() + "            " +
-                                r.getArrayType() + "           " +
-                                r.getRunNumber() + "          " +
-                                r.getRuntimeNs() + "            " +
-                                r.getComparisons() + "               " +
-                                r.getInterchanges()
+                        s.getAlgorithmName() + "," +
+                                s.getArraySize() + "," +
+                                s.getArrayType() + "," +
+                                s.getAvgRuntimeNs() + "," +
+                                s.getMinRuntimeNs() + "," +
+                                s.getMaxRuntimeNs()
                 );
             }
 
-            // write summary row
-            writer.println(
-                            "SUMMARY: "+
-                                    "1-AvgRunTime: "+
-                            summary.getAvgRuntimeNs() + "   " +
-                                    "2-MaxRunTime: "+
-                            summary.getMaxRuntimeNs() + "   " +
-                                    "3-MinRunTime: "+
-                            summary.getMinRuntimeNs()
-            );
-
         } catch(IOException e) {
             System.out.println("Error writing CSV: " + e.getMessage());
-        }
-    }
-
-    public static   void exportAll(List<List<SortResult>> allResults, String filePath) {
-        for(List<SortResult> results : allResults) {
-            ComparisonSummary summary = ComparisonSummary.getSummary(results);
-            export(results, summary, filePath);
         }
     }
 
