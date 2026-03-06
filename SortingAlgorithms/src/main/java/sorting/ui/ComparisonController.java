@@ -19,12 +19,6 @@ import java.util.List;
 
 public class ComparisonController {
 
-    //
-    // // ── Data lists ───────────────────────────────────────────────
-    // private final ObservableList<ComparisonTask> pendingTasks =
-    // FXCollections.observableArrayList();
-    // private final ObservableList<SortResult> results =
-    // FXCollections.observableArrayList();
 
     @FXML
     private CheckBox checkBubble;
@@ -312,6 +306,7 @@ public class ComparisonController {
         minLabel.setText(min + " ns");
         maxLabel.setText(max + " ns");
     }
+
 
     // ─────────────────────────────────────────────────────────────
     // showAlert() — shows a warning popup
