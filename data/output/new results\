@@ -1,3 +1,0 @@
-Algorithm,ArraySize,ArrayType,AvgRuntimeNs,MinRuntimeNs,MaxRuntimeNs
-InsertionSort,2500,SORTED,2610146,2143938,3779150
-QuickSort,2500,SORTED,4819944,3568360,7828443

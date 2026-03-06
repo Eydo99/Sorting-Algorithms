@@ -1,5 +1,6 @@
 package sorting.visualization;
 
+import javafx.geometry.Pos;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Label;
@@ -8,233 +9,221 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.TextAlignment;
 
+import javax.sound.sampled.AudioFormat;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.DataLine;
+import javax.sound.sampled.SourceDataLine;
+import java.util.Map;
+
 public class BarChartPane {
 
-    // ── Colors ───────────────────────────────────────────────────
-    private static final Color COLOR_BACKGROUND = Color.web("#13141a");
-    private static final Color COLOR_BAR_IDLE = Color.web("#2e3148");
-    private static final Color COLOR_BAR_ACTIVE = Color.web("#ff5c6a");
-    private static final Color COLOR_BAR_DONE = Color.web("#00d4aa");
 
-    // ── Dimensions ───────────────────────────────────────────────
-    private static final int CANVAS_WIDTH = 400;
-    private static final int CANVAS_HEIGHT = 280;
-    private static final int ARRAY_CV_HEIGHT = 50;
 
-    // ── Complexity map ───────────────────────────────────────────
-    private static final java.util.Map<String, String> COMPLEXITY = java.util.Map.of(
-            "BubbleSort", "O(n²)",
-            "InsertionSort", "O(n²)",
-            "SelectionSort", "O(n²)",
-            "MergeSort", "O(n log n)",
-            "QuickSort", "O(n log n)",
-            "HeapSort", "O(n log n)");
+    private static final Color background_color=Color.web("#13141a");
+    private static final Color active_bar_color=Color.web("#ff5c6a");
+    private static final Color idle_bar_color=Color.web("#2e3148");
+    private static final Color done_bar_color=Color.web("#00d4aa");
 
-    // ── UI Components ────────────────────────────────────────────
+
+    private static final int canvas_width= 500;
+    private static final int canvas_height= 300;
+    private static final int array_canvas_height= 40;
+
     private final VBox root;
-    private final Canvas canvas;
-    private final Canvas arrayCanvas;
-    private final Label compLabel;
-    private final Label interLabel;
-    private final Label progressLabel;
+    private final Canvas bars_canvas;
+    private final Canvas array_canvas;
+    private final Label comparison_label;
+    private final Label interchanges_label;
+    private final Label progress_label;
 
-    // ── State ────────────────────────────────────────────────────
+
     private final int[] originalArray;
 
-    // ─────────────────────────────────────────────────────────────
-    // Constructor
-    // ─────────────────────────────────────────────────────────────
+    private static final Map<String,String> complexity_map=Map.of(
+            "BubbleSort","O(n^2)",
+            "InsertionSort","O(n^2)",
+            "SelectionSort","O(n^2)",
+            "HeapSort","O(n logn)",
+            "MergeSort","O(n logn)",
+            "QuickSort","O(n logn)"
+    );
+
+
+
     public BarChartPane(String algoName, int[] originalArray) {
         this.originalArray = originalArray.clone();
 
         // ── Header ──
-        Label nameLabel = new Label(algoName);
+        Label nameLabel=new Label(algoName);
         nameLabel.getStyleClass().add("viz-algo-name");
 
-        String complexity = COMPLEXITY.getOrDefault(algoName, "O(?)");
-        Label complexityLabel = new Label(complexity);
+        String complexity=complexity_map.get(algoName);
+        Label complexityLabel=new Label(complexity);
         complexityLabel.getStyleClass().add("viz-complexity");
 
-        HBox header = new HBox(nameLabel, complexityLabel);
-        header.setSpacing(8);
-        header.setAlignment(javafx.geometry.Pos.CENTER_LEFT);
+        HBox header=new HBox(nameLabel,complexityLabel);
+        header.setSpacing(10);
+        header.setAlignment(Pos.CENTER);
         header.getStyleClass().add("viz-panel-header");
 
         // ── Canvas ──
-        canvas = new Canvas(CANVAS_WIDTH, CANVAS_HEIGHT);
-        StackPane canvasWrapper = new StackPane(canvas);
+        bars_canvas=new Canvas(canvas_width, canvas_height);
+        StackPane canvasWrapper=new StackPane(bars_canvas);
         canvasWrapper.setStyle("-fx-padding: 10 10 0 10;");
 
         // ── Stats bar ──
-        compLabel = new Label("Comp:  0");
-        interLabel = new Label("Inter: 0");
-        progressLabel = new Label("0%");
+        comparison_label=new Label("Comp:  0");
+        interchanges_label=new Label("Inter: 0");
+        progress_label=new Label("0%");
 
-        compLabel.getStyleClass().add("viz-stat-comp");
-        interLabel.getStyleClass().add("viz-stat-inter");
-        progressLabel.getStyleClass().add("viz-stat-label");
+        comparison_label.getStyleClass().add("viz-stat-comp");
+        interchanges_label.getStyleClass().add("viz-stat-inter");
+        progress_label.getStyleClass().add("viz-stat-label");
 
-        compLabel.setMinWidth(110);
-        interLabel.setMinWidth(110);
-        progressLabel.setMinWidth(40);
+        comparison_label.setMinWidth(110);
+        interchanges_label.setMinWidth(110);
+        progress_label.setMinWidth(40);
 
         // Spacer pushes progressLabel to the right
-        Region spacer = new Region();
+        Region spacer=new Region();
         HBox.setHgrow(spacer, Priority.ALWAYS);
 
         // Order: compLabel | interLabel | spacer | progressLabel
-        HBox statsBar = new HBox(
-                compLabel, interLabel, spacer, progressLabel);
-        statsBar.setSpacing(16);
+        HBox statsBar = new HBox(comparison_label,interchanges_label,spacer,progress_label);
+        statsBar.setSpacing(25);
         statsBar.setAlignment(javafx.geometry.Pos.CENTER_LEFT);
         statsBar.getStyleClass().add("viz-stats-bar");
 
         // ── Array number canvas ──
-        arrayCanvas = new Canvas(CANVAS_WIDTH, ARRAY_CV_HEIGHT);
-        StackPane arrayWrapper = new StackPane(arrayCanvas);
+        array_canvas=new Canvas(canvas_width,canvas_height);
+        StackPane arrayWrapper=new StackPane(array_canvas);
         arrayWrapper.setStyle("-fx-padding: 4 10 10 10;");
 
         // ── Root panel ──
-        root = new VBox(header, canvasWrapper, statsBar, arrayWrapper);
+        root=new VBox(header, canvasWrapper, statsBar, arrayWrapper);
         root.getStyleClass().add("viz-panel");
-        root.setPrefWidth(CANVAS_WIDTH + 40);
+        root.setPrefWidth(canvas_width + 40);
 
         // Draw initial unsorted state
         drawFrame(originalArray, -1, 0, 0, 0);
     }
 
-    // ─────────────────────────────────────────────────────────────
-    // drawFrame() — draws one snapshot of the array
-    // ─────────────────────────────────────────────────────────────
-    public void drawFrame(int[] array, int activeIdx,
-            long comparisons, long interchanges,
-            int progress) {
 
-        GraphicsContext gc = canvas.getGraphicsContext2D();
+    public void drawFrame(int[] array, int activeIdx, long comparisons, long interchanges, int progress) {
 
-        // 1. Clear canvas
-        gc.setFill(COLOR_BACKGROUND);
-        gc.fillRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
+        GraphicsContext gc=bars_canvas.getGraphicsContext2D();
+
+
+        gc.setFill(background_color);
+        gc.fillRect(0, 0,canvas_width,canvas_height);
 
         if (array == null || array.length == 0)
             return;
 
-        // 2. Find max ONCE before the loop
-        int max = 1;
-        for (int v : array)
-            if (v > max)
-                max = v;
 
-        // 3. Calculate bar dimensions
-        double barWidth = (double) CANVAS_WIDTH / array.length;
+        int max=array[0];
+        int min=array[0];
+        for (int v : array)
+        {
+            if (v > max) max = v;
+            if (v < min) min = v;
+        }
+        int shift = (min<0)? -min : 0;
+        int range=max-min;
+        if(range ==0) range=1;
+
+
+        double barWidth = (double) canvas_width / array.length;
         double gap = barWidth > 4 ? 1.5 : 0.5;
 
-        // 4. Draw each bar
         for (int i = 0; i < array.length; i++) {
-            double barHeight = ((double) array[i] / max) * CANVAS_HEIGHT;
-            double x = i * barWidth;
-            double y = CANVAS_HEIGHT - barHeight;
+            double barHeight=((double) (array[i]+shift) / range) * canvas_height;
+            double x=i * barWidth;
+            double y=canvas_height - barHeight;
 
-            // Color logic:
-            // progress 100 → all teal (fully sorted)
-            // activeIdx → red (currently being compared)
-            // finalArray match → teal (already in sorted position)
-            // everything else → grey
-            // Color logic
+
             if (progress == 100) {
-                gc.setFill(COLOR_BAR_DONE);
+                gc.setFill(done_bar_color);
             } else if (i == activeIdx) {
-                gc.setFill(COLOR_BAR_ACTIVE);
+                gc.setFill(active_bar_color);
             } else {
-                gc.setFill(COLOR_BAR_IDLE);
+                gc.setFill(idle_bar_color);
             }
 
             gc.fillRoundRect(x + gap, y, barWidth - gap * 2, barHeight, 3, 3);
         }
 
-        // 5. Play tone AFTER drawing — once per frame, not inside loop
+
         if (activeIdx >= 0 && activeIdx < array.length && progress < 100) {
             playTone(array[activeIdx], max);
         }
 
-        // 6. Draw array number boxes
-        drawArrayBoxes(array, activeIdx, progress);
 
-        // 7. Update labels
-        compLabel.setText("Comp:  " + comparisons);
-        interLabel.setText("Inter: " + interchanges);
-        progressLabel.setText(progress + "%");
+        drawArrayBoxes(array,activeIdx,progress);
+
+
+        comparison_label.setText("Comp:  "+comparisons);
+        interchanges_label.setText("Inter: "+interchanges);
+        progress_label.setText(progress+"%");
     }
 
-    // ─────────────────────────────────────────────────────────────
-    // reset() — redraws original unsorted array
-    // ─────────────────────────────────────────────────────────────
     public void reset() {
         drawFrame(originalArray, -1, 0, 0, 0);
     }
 
-    // ─────────────────────────────────────────────────────────────
-    // drawArrayBoxes() — draws array values as numbered cells
-    // ─────────────────────────────────────────────────────────────
-    private void drawArrayBoxes(int[] array, int activeIdx, int progress) {
-        GraphicsContext gc = arrayCanvas.getGraphicsContext2D();
 
-        // Clear
-        gc.setFill(COLOR_BACKGROUND);
-        gc.fillRect(0, 0, CANVAS_WIDTH, ARRAY_CV_HEIGHT);
+    private void drawArrayBoxes(int[] array, int activeIdx, int progress) {
+        GraphicsContext gc = array_canvas.getGraphicsContext2D();
+
+
+        gc.setFill(background_color);
+        gc.fillRect(0, 0, canvas_width, array_canvas_height);
 
         if (array == null || array.length == 0)
             return;
 
-        double cellW = (double) CANVAS_WIDTH / array.length;
-        double cellH = ARRAY_CV_HEIGHT - 8;
+        double cell_width=(double) canvas_width / array.length;
+        double cellHeight=array_canvas_height - 8;
         double y = 4;
-        double gap = cellW > 6 ? 1.5 : 0.5;
+        double gap=cell_width > 6 ? 1.5 : 0.5;
 
         // Adaptive font size
-        double fontSize = Math.min(14, Math.max(7, cellW * 0.55));
+        double fontSize = Math.min(14, Math.max(7, cell_width * 0.55));
         gc.setFont(Font.font("Monospace", fontSize));
         gc.setTextAlign(TextAlignment.CENTER);
 
         for (int i = 0; i < array.length; i++) {
-            double x = i * cellW;
+            double x = i * cell_width;
 
-            // Box color
             if (progress == 100) {
-                gc.setFill(COLOR_BAR_DONE.deriveColor(0, 1, 1, 0.25));
+                gc.setFill(done_bar_color.deriveColor(0, 1, 1, 0.25));
             } else if (i == activeIdx) {
-                gc.setFill(COLOR_BAR_ACTIVE.deriveColor(0, 1, 1, 0.3));
+                gc.setFill(active_bar_color.deriveColor(0, 1, 1, 0.3));
             } else {
-                gc.setFill(COLOR_BAR_IDLE.deriveColor(0, 1, 1, 0.5));
+                gc.setFill(idle_bar_color.deriveColor(0, 1, 1, 0.5));
             }
-            gc.fillRoundRect(x + gap, y, cellW - gap * 2, cellH, 4, 4);
+            gc.fillRoundRect(x + gap, y, cell_width - gap * 2, cellHeight, 4, 4);
 
-            // Text color
             if (progress == 100) {
-                gc.setFill(COLOR_BAR_DONE);
+                gc.setFill(done_bar_color);
             } else if (i == activeIdx) {
-                gc.setFill(COLOR_BAR_ACTIVE);
+                gc.setFill(active_bar_color);
             } else {
                 gc.setFill(Color.web("#b0b3c8"));
             }
 
             // Draw value — only if cells are wide enough to read
-            if (cellW > 10) {
-                gc.fillText(String.valueOf(array[i]), x + cellW / 2, y + cellH * 0.68);
+            if (cell_width > 10) {
+                gc.fillText(String.valueOf(array[i]), x + cell_width / 2, y + cellHeight * 0.68);
             }
         }
     }
 
-    // ─────────────────────────────────────────────────────────────
-    // getRoot() — returns the panel VBox for display
-    // ─────────────────────────────────────────────────────────────
     public VBox getRoot() {
         return root;
     }
 
-    // ─────────────────────────────────────────────────────────────
-    // playTone() — plays a sine wave tone based on bar value
-    // ─────────────────────────────────────────────────────────────
+
     public void playTone(int value, int maxValue) {
         if (maxValue == 0)
             return;
@@ -264,13 +253,13 @@ public class BarChartPane {
                     buffer[2 * i + 1] = (byte) ((sample >> 8) & 0xFF);
                 }
 
-                javax.sound.sampled.AudioFormat format = new javax.sound.sampled.AudioFormat(sampleRate, 16, 1, true,
+                AudioFormat format = new AudioFormat(sampleRate, 16, 1, true,
                         false);
 
-                javax.sound.sampled.DataLine.Info info = new javax.sound.sampled.DataLine.Info(
+                DataLine.Info info = new DataLine.Info(
                         javax.sound.sampled.SourceDataLine.class, format);
 
-                javax.sound.sampled.SourceDataLine line = (javax.sound.sampled.SourceDataLine) javax.sound.sampled.AudioSystem
+                SourceDataLine line = (SourceDataLine) AudioSystem
                         .getLine(info);
 
                 line.open(format);

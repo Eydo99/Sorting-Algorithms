@@ -5,12 +5,24 @@ import java.util.List;
 public class ComparisonSummary {
     private String algorithmName;
     private int arraySize;
-    private ArrayType arrayType;
+    private String arrayType;
     private long comparisons;
     private long interchanges;
    private long avgRuntimeNs;
    private long minRuntimeNs;
-   private long maxRuntimeNs;
+    private long maxRuntimeNs;
+    private int runs;
+
+
+    public int getRuns() {
+        return runs;
+    }
+
+    public void setRuns(int runs) {
+        this.runs = runs;
+    }
+
+
 
     public String getAlgorithmName() {
         return algorithmName;
@@ -20,11 +32,11 @@ public class ComparisonSummary {
         this.algorithmName = algorithmName;
     }
 
-    public ArrayType getArrayType() {
+    public String getArrayType() {
         return arrayType;
     }
 
-    public void setArrayType(ArrayType arrayType) {
+    public void setArrayType(String arrayType) {
         this.arrayType = arrayType;
     }
 
@@ -80,7 +92,9 @@ public class ComparisonSummary {
     public static  ComparisonSummary getSummary(List<SortResult> results) {
         long min = Long.MAX_VALUE;
         long max = Long.MIN_VALUE;
-        long total = 0;
+        long totalRunTime = 0;
+        long totalComparisons = 0;
+        long totalInterchanges = 0;
         ComparisonSummary summary=new ComparisonSummary();
         for(SortResult result: results) {
             if(result.getRuntimeNs() < min) {
@@ -89,18 +103,26 @@ public class ComparisonSummary {
             if(result.getRuntimeNs() > max) {
                 max = result.getRuntimeNs();
             }
-            total += result.getRuntimeNs();
+            totalRunTime += result.getRuntimeNs();
+            totalComparisons += result.getComparisons();
+            totalInterchanges += result.getInterchanges();
         }
-        long avg = total / results.size();
-        summary.setAvgRuntimeNs(avg);
+        long avgRunTIme = totalRunTime / results.size();
+        long avgComparisons = totalComparisons / results.size();
+        long avgInterchanges = totalInterchanges / results.size();
+
+        summary.setAvgRuntimeNs(avgRunTIme);
         summary.setMinRuntimeNs(min);
         summary.setMaxRuntimeNs(max);
         summary.setAlgorithmName(results.getFirst().getAlgorithmName());
         summary.setArraySize(results.getFirst().getArraySize());
         summary.setArrayType(results.getFirst().getArrayType());
-        summary.setComparisons(results.getFirst().getComparisons());
-        summary.setInterchanges(results.getFirst().getInterchanges());
+        summary.setComparisons(avgComparisons);
+        summary.setInterchanges(avgInterchanges);
+        summary.setRuns(results.size());
         return summary;
     }
+
+
 
 }

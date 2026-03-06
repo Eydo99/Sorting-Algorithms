@@ -3,6 +3,7 @@ package sorting.ui;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
+import javafx.stage.FileChooser;
 import sorting.algorithms.AbstractSort;
 import sorting.algorithms.SortAlgorithm;
 import sorting.algorithms.SortAlgorithmFactory;
@@ -12,6 +13,7 @@ import sorting.model.SortStep;
 import sorting.visualization.BarChartPane;
 import sorting.visualization.SortAnimator;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,6 +32,10 @@ public class VisualizationController {
     @FXML private CheckBox vizCheckMerge;
     @FXML private CheckBox vizCheckQuick;
     @FXML private CheckBox vizCheckHeap;
+
+    @FXML private Button selectFileBtn;
+    @FXML private Label  selectedFileLabel;
+    private String selectedFilePath = null;
 
     // ── One animator per panel ───────────────────────────────────
     private final List<SortAnimator> animators = new ArrayList<>();
@@ -51,40 +57,20 @@ public class VisualizationController {
     @FXML
     private void handleAddVisualizer() {
 
-        // 1. Get selected algorithms
+        // 1. Validate algorithms
         List<String> algorithms = getSelectedAlgorithms();
         if (algorithms.isEmpty()) {
             showAlert("Please select at least one algorithm.");
             return;
         }
 
-        // 2. Validate array type
-        if (vizTypeCombo.getValue() == null) {
-            showAlert("Please select an array type.");
-            return;
-        }
+        // 2. Build base array — from file or random
+        int[] baseArray = buildBaseArray();
+        if (baseArray == null) return;
 
-        // 3. Validate size
-        int size;
-        try {
-            size = Integer.parseInt(vizSizeField.getText().trim());
-            if (size < 2 || size > 100) {
-                showAlert("Array size must be between 2 and 100.");
-                return;
-            }
-        } catch (NumberFormatException e) {
-            showAlert("Array size must be a valid number.");
-            return;
-        }
-
-        // 4. Generate ONE shared array for all algorithms
-        ArrayType type  = ArrayType.valueOf(vizTypeCombo.getValue());
-        int[] baseArray = ArrayGenerator.generateFromRandom(size, type);
-
-        // 5. Create one panel per selected algorithm
+        // 3. Create one panel per selected algorithm
         for (String algoName : algorithms) {
 
-            // Run algorithm with step collection ON
             SortAlgorithm algo = SortAlgorithmFactory.getAlgorithm(algoName);
             ((AbstractSort) algo).setSteps(true);
             int[] arrayToSort = baseArray.clone();
@@ -97,10 +83,8 @@ public class VisualizationController {
                 continue;
             }
 
-            // Create the visual panel
             BarChartPane chartPane = new BarChartPane(algoName, baseArray);
 
-            // Create the animator
             SortAnimator animator = new SortAnimator(
                     steps,
                     algo.getComparisons(),
@@ -108,9 +92,57 @@ public class VisualizationController {
                     chartPane
             );
 
-            // Store and display
             animators.add(animator);
             visualizerBox.getChildren().add(chartPane.getRoot());
+        }
+    }
+
+    // ─────────────────────────────────────────────────────────────
+// buildBaseArray() — returns array from file or random
+// Returns null if any validation fails
+// ─────────────────────────────────────────────────────────────
+    private int[] buildBaseArray() {
+
+        if (selectedFilePath != null) {
+            // ── FROM FILE mode ──
+            int[] array = ArrayGenerator.generateFromFile(selectedFilePath);
+
+            if (array == null) {
+                showAlert("Could not read file: " + selectedFilePath);
+                return null;
+            }
+            if (array.length < 2) {
+                showAlert("File must contain at least 2 elements.");
+                return null;
+            }
+            if (array.length > 100) {
+                showAlert("File array too large — maximum 100 elements for visualization.");
+                return null;
+            }
+
+            return array;
+
+        } else {
+            // ── FROM RANDOM mode ──
+            if (vizTypeCombo.getValue() == null) {
+                showAlert("Please select an array type.");
+                return null;
+            }
+
+            int size;
+            try {
+                size = Integer.parseInt(vizSizeField.getText().trim());
+                if (size < 2 || size > 100) {
+                    showAlert("Array size must be between 2 and 100.");
+                    return null;
+                }
+            } catch (NumberFormatException e) {
+                showAlert("Array size must be a valid number.");
+                return null;
+            }
+
+            ArrayType type = ArrayType.valueOf(vizTypeCombo.getValue());
+            return ArrayGenerator.generateFromRandom(size, type);
         }
     }
 
@@ -126,7 +158,7 @@ public class VisualizationController {
 
         double speed = speedSlider.getValue();
         for (SortAnimator animator : animators) {
-            animator.play(speed);
+            animator.startAnimation(speed);
         }
     }
 
@@ -136,7 +168,7 @@ public class VisualizationController {
     @FXML
     private void handlePause() {
         for (SortAnimator animator : animators) {
-            animator.pause();
+            animator.pauseAnimation();
         }
     }
 
@@ -155,12 +187,13 @@ public class VisualizationController {
     // ─────────────────────────────────────────────────────────────
     @FXML
     private void handleReset() {
-        for (SortAnimator animator : animators) {
-            animator.reset();
-        }
-        // Clear all panels from screen and animator list
+        for (SortAnimator animator : animators) animator.reset();
         visualizerBox.getChildren().clear();
         animators.clear();
+
+        // Clear file selection
+        selectedFilePath = null;
+        selectedFileLabel.setText("No file selected");
     }
 
     // ─────────────────────────────────────────────────────────────
@@ -186,5 +219,24 @@ public class VisualizationController {
         alert.setHeaderText(null);
         alert.setContentText(message);
         alert.showAndWait();
+    }
+
+
+    @FXML
+    private void handleSelectFile() {
+        FileChooser chooser = new FileChooser();
+        chooser.setTitle("Select Input File");
+        chooser.getExtensionFilters().add(
+                new FileChooser.ExtensionFilter("Text Files", "*.txt")
+        );
+
+        File file = chooser.showOpenDialog(
+                selectFileBtn.getScene().getWindow()
+        );
+
+        if (file != null) {
+            selectedFilePath = file.getAbsolutePath();
+            selectedFileLabel.setText(file.getName());
+        }
     }
 }

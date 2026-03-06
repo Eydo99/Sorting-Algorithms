@@ -25,6 +25,17 @@
                        promptText="40" prefWidth="80"/>
         </VBox>
 
+        <!-- From File -->
+        <VBox styleClass="control-group" spacing="4">
+            <Label text="FROM FILE" styleClass="control-label"/>
+            <HBox spacing="8" alignment="CENTER_LEFT">
+                <Button fx:id="selectFileBtn" text="📂 Select File"
+                        styleClass="btn-ghost" onAction="#handleSelectFile"/>
+                <Label fx:id="selectedFileLabel" text="No file selected"
+                       styleClass="control-label"/>
+            </HBox>
+        </VBox>
+
         <Separator orientation="VERTICAL" styleClass="bar-divider"/>
 
         <!-- Algorithms -->

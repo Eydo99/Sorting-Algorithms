@@ -53,9 +53,10 @@
         <VBox styleClass="control-group" spacing="4">
             <Label text="FROM FILE" styleClass="control-label"/>
             <HBox spacing="8" alignment="CENTER_LEFT">
-                <CheckBox fx:id="fromFileField" styleClass="algo-chip"/>
-                <TextField fx:id="fileNameField" styleClass="text-input"
-                           promptText="filename.txt" prefWidth="130" disable="true"/>
+                <Button fx:id="selectFilesBtn" text="📂 Select Files"
+                        styleClass="btn-ghost" onAction="#handleSelectFiles"/>
+                <Label fx:id="selectedFilesLabel" text="No files selected"
+                       styleClass="control-label"/>
             </HBox>
         </VBox>
 
@@ -88,14 +89,15 @@
         <TableView fx:id="resultsTable" VBox.vgrow="ALWAYS"
                    styleClass="data-table">
             <columns>
-                <TableColumn fx:id="resultAlgoCol"  text="Algorithm"    prefWidth="120"/>
-                <TableColumn fx:id="resultSizeCol"  text="Size"         prefWidth="70"/>
-                <TableColumn fx:id="resultTypeCol"  text="Type"         prefWidth="100"/>
-                <TableColumn fx:id="resultMinRunTimeCol"   text="Min. Runtime(ns)"          prefWidth="50"/>
-                <TableColumn fx:id="resultMaxRunTimeCol"  text="Max. Runtime (ns)"    prefWidth="100"/>
-                <TableColumn fx:id="resultAverageCol"  text="Avg. Runtime (ns)"    prefWidth="100"/>
-                <TableColumn fx:id="resultCompCol"  text="Comparisons"  prefWidth="110"/>
-                <TableColumn fx:id="resultInterCol" text="Interchanges" prefWidth="110"/>
+                <TableColumn fx:id="resultAlgoCol"  text="Algorithm"    prefWidth="120"  style="-fx-alignment: CENTER;"/>
+                <TableColumn fx:id="resultSizeCol"  text="Size"         prefWidth="70" style="-fx-alignment: CENTER;"/>
+                <TableColumn fx:id="resultTypeCol"  text="Type"         prefWidth="100" style="-fx-alignment: CENTER;"/>
+                <TableColumn fx:id="resultNoOfRunsCol"  text="Runs"         prefWidth="100" style="-fx-alignment: CENTER;"/>
+                <TableColumn fx:id="resultMinRunTimeCol"   text="Min. Runtime(ns)"          prefWidth="50" style="-fx-alignment: CENTER;"/>
+                <TableColumn fx:id="resultMaxRunTimeCol"  text="Max. Runtime (ns)"    prefWidth="100" style="-fx-alignment: CENTER;"/>
+                <TableColumn fx:id="resultAverageCol"  text="Avg. Runtime (ns)"    prefWidth="100" style="-fx-alignment: CENTER;"/>
+                <TableColumn fx:id="resultCompCol"  text="Comparisons"  prefWidth="110" style="-fx-alignment: CENTER;"/>
+                <TableColumn fx:id="resultInterCol" text="Interchanges" prefWidth="110" style="-fx-alignment: CENTER;"/>
             </columns>
             <placeholder>
                 <Label text="No results yet — add tasks and run" styleClass="table-placeholder"/>

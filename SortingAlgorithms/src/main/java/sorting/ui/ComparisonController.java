@@ -2,6 +2,7 @@ package sorting.ui;
 
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
@@ -39,10 +40,10 @@ public class ComparisonController {
     private TextField arraySizeField;
     @FXML
     private TextField runsField;
-    @FXML
-    private CheckBox fromFileField;
-    @FXML
-    private TextField fileNameField;
+
+    @FXML private Button     selectFilesBtn;
+    @FXML private Label      selectedFilesLabel;
+    private final List<String> selectedFilePaths = new ArrayList<>();
 
     @FXML
     private TableView<ComparisonSummary> resultsTable;
@@ -62,6 +63,8 @@ public class ComparisonController {
     private TableColumn<ComparisonSummary, Long> resultCompCol;
     @FXML
     private TableColumn<ComparisonSummary, Long> resultInterCol;
+    @FXML
+    private TableColumn<ComparisonSummary, Integer> resultNoOfRunsCol;
 
     @FXML
     private TableView<ComparisonTask> pendingTasksTable;
@@ -93,13 +96,11 @@ public class ComparisonController {
         arrayTypeCombo.getItems().setAll("SORTED", "INVERSELY_SORTED", "RANDOM");
         arrayTypeCombo.setValue("RANDOM");
 
-        fromFileField.setOnAction((event) -> {
-            fileNameField.setDisable(!fromFileField.isSelected());
-        });
 
         resultAlgoCol.setCellValueFactory(new PropertyValueFactory<>("algorithmName"));
         resultSizeCol.setCellValueFactory(new PropertyValueFactory<>("arraySize"));
         resultTypeCol.setCellValueFactory(new PropertyValueFactory<>("arrayType"));
+        resultNoOfRunsCol.setCellValueFactory(new PropertyValueFactory<>("runs"));
         resultMinRunTimeCol.setCellValueFactory(new PropertyValueFactory<>("minRuntimeNs"));
         resultMaxRunTimeCol.setCellValueFactory(new PropertyValueFactory<>("maxRuntimeNs"));
         resultAverageCol.setCellValueFactory(new PropertyValueFactory<>("avgRuntimeNs"));
@@ -117,70 +118,66 @@ public class ComparisonController {
         pendingTasksTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY_FLEX_LAST_COLUMN);
 
         // Update result count badge whenever results change
-        results.addListener((javafx.collections.ListChangeListener<ComparisonSummary>) c -> resultCountLabel
+        results.addListener((ListChangeListener<ComparisonSummary>) c -> resultCountLabel
                 .setText(results.size() + " rows"));
 
     }
 
     @FXML
     private void handleRunSequential() {
-        List<ComparisonTask> tasks = buildTasksFromForm();
-        if (tasks == null)
-            return;
+        List<ComparisonTask>tasks =buildTasksFromForm();
+        if (tasks == null) return;
 
-        results.clear();
 
         Task<Void> task = new Task<>() {
             @Override
             protected Void call() {
 
                 for (ComparisonTask t : tasks) {
-                    ComparisonRunner runner = new ComparisonRunner(t);
-                    List<SortResult> result = runner.run();
-                    ComparisonSummary summary = ComparisonSummary.getSummary(result);
+                    ComparisonRunner runner=new ComparisonRunner(t);
+                    List<SortResult> result=runner.run();
+                    ComparisonSummary summary=ComparisonSummary.getSummary(result);
 
-                    Platform.runLater(() -> {
+                    Platform.runLater(()->{
                         results.add(summary);
                         pendingTasks.remove(t);
                     });
                 }
 
-                Platform.runLater(() -> updateSummary());
+                Platform.runLater(()->updateSummary());
 
                 return null;
             }
         };
-
         new Thread(task).start();
     }
 
     @FXML
     private void handleRunParallel() {
-        List<ComparisonTask> tasks = buildTasksFromForm();
+        List<ComparisonTask> tasks=buildTasksFromForm();
         if (tasks == null)
             return;
 
-        results.clear();
 
         Task<Void> task = new Task<>() {
             @Override
             protected Void call() {
 
-                ParallelComparisonManager manager = new ParallelComparisonManager();
+                ParallelComparisonManager manager=new ParallelComparisonManager();
 
                 for (ComparisonTask t : tasks)
                     manager.addTask(t);
 
-                List<List<SortResult>> allResults = manager.runAll();
+                List<List<SortResult>> allResults=manager.runAll();
                 manager.shutdown();
 
-                for (List<SortResult> r : allResults) {
+                for (List<SortResult> r:allResults) {
                     ComparisonSummary summary = ComparisonSummary.getSummary(r);
 
-                    Platform.runLater(() -> results.add(summary));
+                    Platform.runLater(()->results.add(summary));
                 }
 
-                Platform.runLater(() -> {
+                Platform.runLater(()->{
                     pendingTasks.removeAll(tasks);
                     updateSummary();
                 });
@@ -188,13 +185,10 @@ public class ComparisonController {
                 return null;
             }
         };
-
         new Thread(task).start();
     }
 
-    // ─────────────────────────────────────────────────────────────
-    // handleExportCsv() — opens save dialog and exports
-    // ─────────────────────────────────────────────────────────────
+
     @FXML
     private void handleExportCsv() {
         if (results.isEmpty()) {
@@ -217,6 +211,22 @@ public class ComparisonController {
     }
 
     @FXML
+    private void handleSelectFiles() {
+        FileChooser chooser=new FileChooser();
+        chooser.setTitle("Select Input Files");
+        chooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Text Files", "*.txt"));
+
+        List<File> files = chooser.showOpenMultipleDialog(selectFilesBtn.getScene().getWindow());
+
+        if (files != null && !files.isEmpty()) {
+            selectedFilePaths.clear();
+            for (File f : files) selectedFilePaths.add(f.getAbsolutePath());
+
+            selectedFilesLabel.setText(files.size() == 1 ? files.getFirst().getName() : files.size() + " files selected");
+        }
+    }
+
+    @FXML
     private void handleClear() {
         pendingTasks.clear();
         results.clear();
@@ -224,24 +234,14 @@ public class ComparisonController {
         minLabel.setText("--");
         maxLabel.setText("--");
         resultCountLabel.setText("");
+        selectedFilePaths.clear();
+        selectedFilesLabel.setText("No file selected");
     }
 
     private List<ComparisonTask> buildTasksFromForm() {
         List<String> selectedAlgorithms = getSelectedAlgorithms();
         if (selectedAlgorithms.isEmpty()) {
             showAlert("No algorithms selected.");
-            return null;
-        }
-
-        int size;
-        try {
-            size = Integer.parseInt(arraySizeField.getText().trim());
-            if (size < 1) {
-                showAlert("Please enter a number greater than 1.");
-                return null;
-            }
-        } catch (NumberFormatException e) {
-            showAlert("Please enter an integer");
             return null;
         }
 
@@ -257,18 +257,32 @@ public class ComparisonController {
             return null;
         }
 
-        boolean isFromFIle = fromFileField.isSelected();
-        String fileName = (isFromFIle) ? fileNameField.getText().trim() : "";
-        if (isFromFIle && fileName.isEmpty()) {
-            showAlert("Please enter a file name");
-            return null;
-        }
-
-        ArrayType arrayType = ArrayType.valueOf(arrayTypeCombo.getValue().trim().toUpperCase());
         List<ComparisonTask> tasks = new ArrayList<>();
 
-        for (String selectedAlgorithm : selectedAlgorithms) {
-            tasks.add(new ComparisonTask(selectedAlgorithm, size, arrayType, runs, isFromFIle, fileName));
+        if (!selectedFilePaths.isEmpty()) {
+            for (String filePath : selectedFilePaths) {
+                for (String algo : selectedAlgorithms) {
+                    tasks.add(new ComparisonTask(algo, 0, ArrayType.RANDOM, runs, true, filePath));
+                }
+            }
+        }
+        else {
+            int size;
+            try {
+                size = Integer.parseInt(arraySizeField.getText().trim());
+                if (size < 1) {
+                    showAlert("Please enter a number greater than 1.");
+                    return null;
+                }
+            } catch (NumberFormatException e) {
+                showAlert("Please enter an integer");
+                return null;
+            }
+
+            ArrayType arrayType = ArrayType.valueOf(arrayTypeCombo.getValue().trim().toUpperCase());
+            for (String algo : selectedAlgorithms) {
+                tasks.add(new ComparisonTask(algo, size, arrayType, runs, false, null));
+            }
         }
 
         pendingTasks.addAll(tasks);
@@ -308,9 +322,6 @@ public class ComparisonController {
     }
 
 
-    // ─────────────────────────────────────────────────────────────
-    // showAlert() — shows a warning popup
-    // ─────────────────────────────────────────────────────────────
     private void showAlert(String message) {
         Alert alert = new Alert(Alert.AlertType.WARNING);
         alert.setTitle("Input Error");
@@ -318,4 +329,5 @@ public class ComparisonController {
         alert.setContentText(message);
         alert.showAndWait();
     }
+
 }

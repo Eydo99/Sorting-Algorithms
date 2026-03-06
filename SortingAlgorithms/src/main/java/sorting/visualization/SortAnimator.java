@@ -9,114 +9,81 @@ import java.util.List;
 
 public class SortAnimator {
 
-    // ── Data ─────────────────────────────────────────────────────
-    private final List<SortStep> steps;
-    private final long           totalComparisons;
-    private final long           totalInterchanges;
-    private final BarChartPane   chartPane;
 
-    // ── Animation state ──────────────────────────────────────────
-    private int      currentStep = 0;
+    private final List<SortStep> sortSteps;
+    private final long totalComparisons;
+    private final long totalInterchanges;
+    private final BarChartPane barChartPane;
+
+
+    private int currentStep=0;
     private Timeline timeline;
 
-    // ─────────────────────────────────────────────────────────────
-    // Constructor
-    // ─────────────────────────────────────────────────────────────
-    public SortAnimator(List<SortStep> steps,
-                        long totalComparisons,
-                        long totalInterchanges,
-                        BarChartPane chartPane) {
-        this.steps             = steps;
-        this.totalComparisons  = totalComparisons;
-        this.totalInterchanges = totalInterchanges;
-        this.chartPane         = chartPane;
+    public SortAnimator(List<SortStep> sortSteps,long totalComparisons,long totalInterchanges,BarChartPane barChartPane) {
+        this.totalComparisons=totalComparisons;
+        this.totalInterchanges=totalInterchanges;
+        this.sortSteps=sortSteps;
+        this.barChartPane=barChartPane;
     }
 
-    // ─────────────────────────────────────────────────────────────
-    // play() — starts the Timeline animation
-    // ─────────────────────────────────────────────────────────────
-    public void play(double speed) {
+    public void startAnimation(double speed) {
         if (!hasMoreSteps()) return;
-        if (timeline != null) timeline.stop();
+        if(timeline!=null) timeline.stop();
 
-        double delayMs = 300.0 / speed;
+        double delay=300.0/speed;
 
-        timeline = new Timeline(new KeyFrame(Duration.millis(delayMs), e -> {
-            if (hasMoreSteps()) {
+        timeline=new Timeline(new KeyFrame(Duration.millis(delay), event -> {
+            if(hasMoreSteps())
+            {
                 drawCurrentStep();
                 currentStep++;
-            } else {
+            }
+            else
+            {
                 timeline.stop();
                 drawFinalState();
             }
-        }));
-
+                }));
         timeline.setCycleCount(Timeline.INDEFINITE);
         timeline.play();
     }
 
-    // ─────────────────────────────────────────────────────────────
-    // pause() — freezes the animation at current step
-    // ─────────────────────────────────────────────────────────────
-    public void pause() {
-        if (timeline != null) timeline.pause();
+    public void pauseAnimation() {
+        if(timeline!=null) timeline.pause();
     }
 
-    // ─────────────────────────────────────────────────────────────
-    // step() — manually advances exactly one step
-    // ─────────────────────────────────────────────────────────────
-    public void step() {
-        if (!hasMoreSteps()) return;
+
+    public void step()
+    {
+        if(!hasMoreSteps()) return;
         drawCurrentStep();
         currentStep++;
     }
 
-    // ─────────────────────────────────────────────────────────────
-    // reset() — goes back to step 0
-    // ─────────────────────────────────────────────────────────────
-    public void reset() {
-        if (timeline != null) timeline.stop();
-        currentStep = 0;
-        chartPane.reset();
+
+
+    public void reset()
+    {
+        if(timeline!=null) timeline.stop();
+        currentStep=0;
+        barChartPane.reset();
     }
 
-    // ─────────────────────────────────────────────────────────────
-    // hasMoreSteps() — true if animation is not finished
-    // ─────────────────────────────────────────────────────────────
-    public boolean hasMoreSteps() {
-        return currentStep < steps.size();
+
+    public boolean hasMoreSteps() { return currentStep < sortSteps.size(); }
+
+    private void  drawCurrentStep()
+    {
+        SortStep sortStep=sortSteps.get(currentStep);
+        int progress= (currentStep/sortSteps.size()*100);
+        long comparisons=(totalComparisons*currentStep)/sortSteps.size();
+        long interchanges=(totalInterchanges*currentStep)/sortSteps.size();
+
+        barChartPane.drawFrame(sortStep.array,sortStep.activeIndex,comparisons,interchanges,progress);
     }
 
-    // ─────────────────────────────────────────────────────────────
-    // drawCurrentStep() — draws the current step on the canvas
-    // ─────────────────────────────────────────────────────────────
-    private void drawCurrentStep() {
-        SortStep step = steps.get(currentStep);
-
-        int  progress     = (int) ((currentStep / (double) steps.size()) * 100);
-        long comparisons  = (long) (totalComparisons  * currentStep / (double) steps.size());
-        long interchanges = (long) (totalInterchanges * currentStep / (double) steps.size());
-
-        chartPane.drawFrame(
-                step.array,
-                step.activeIndex,
-                comparisons,
-                interchanges,
-                progress
-        );
-    }
-
-    // ─────────────────────────────────────────────────────────────
-    // drawFinalState() — draws fully sorted array all teal
-    // ─────────────────────────────────────────────────────────────
     private void drawFinalState() {
-        SortStep lastStep = steps.get(steps.size() - 1);
-        chartPane.drawFrame(
-                lastStep.array,
-                -1,
-                totalComparisons,
-                totalInterchanges,
-                100
-        );
+        SortStep lastStep = sortSteps.getLast();
+        barChartPane.drawFrame(lastStep.array, -1, totalComparisons, totalInterchanges, 100);
     }
 }

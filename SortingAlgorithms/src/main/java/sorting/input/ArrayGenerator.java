@@ -13,8 +13,7 @@ public class ArrayGenerator {
 
 
     public static int[] generateFromFile(String fileName)  {
-        String path = "data/input/"+fileName;
-        try(BufferedReader reader = new BufferedReader(new FileReader(path)))
+        try(BufferedReader reader = new BufferedReader(new FileReader(fileName)))
         {
             String line=reader.readLine();
             return parseFileInput(line);

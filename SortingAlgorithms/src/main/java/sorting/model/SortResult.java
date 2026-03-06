@@ -6,7 +6,7 @@ public class SortResult {
     long comparisons;
     long interchanges;
     long runtimeNs;
-    ArrayType arrayType;
+    String arrayType;
     int runNumber;
 
 
@@ -50,11 +50,11 @@ public class SortResult {
         this.interchanges = interchanges;
     }
 
-    public ArrayType getArrayType() {
+    public String getArrayType() {
         return arrayType;
     }
 
-    public void setArrayType(ArrayType arrayType) {
+    public void setArrayType(String arrayType) {
         this.arrayType = arrayType;
     }
 
