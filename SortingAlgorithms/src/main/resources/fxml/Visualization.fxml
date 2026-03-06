@@ -9,23 +9,23 @@
       fx:controller="sorting.ui.VisualizationController"
       styleClass="root-container">
 
-    <!-- ── CONTROL BAR ── -->
+    <!--CONTROL BAR-->
     <HBox styleClass="control-bar" alignment="CENTER_LEFT" spacing="16">
 
-        <!-- Array Type -->
+        <!--Array Type-->
         <VBox styleClass="control-group" spacing="4">
             <Label text="ARRAY TYPE" styleClass="control-label"/>
             <ComboBox fx:id="vizTypeCombo" styleClass="combo-input" prefWidth="140"/>
         </VBox>
 
-        <!-- Size -->
+        <!--Size-->
         <VBox styleClass="control-group" spacing="4">
             <Label text="SIZE (MAX 100)" styleClass="control-label"/>
             <TextField fx:id="vizSizeField" styleClass="text-input"
                        promptText="40" prefWidth="80"/>
         </VBox>
 
-        <!-- From File -->
+        <!--From File-->
         <VBox styleClass="control-group" spacing="4">
             <Label text="FROM FILE" styleClass="control-label"/>
             <HBox spacing="8" alignment="CENTER_LEFT">
@@ -38,7 +38,7 @@
 
         <Separator orientation="VERTICAL" styleClass="bar-divider"/>
 
-        <!-- Algorithms -->
+        <!--Algorithms-->
         <VBox styleClass="control-group" spacing="4">
             <Label text="ALGORITHMS" styleClass="control-label"/>
             <HBox spacing="8" alignment="CENTER_LEFT">
@@ -58,7 +58,7 @@
 
     </HBox>
 
-    <!-- ── PLAYBACK BAR ── -->
+    <!--PLAYBACK BAR-->
     <HBox styleClass="playback-bar" alignment="CENTER_LEFT" spacing="12">
 
         <Label text="0.5×" styleClass="speed-label"/>
@@ -75,7 +75,7 @@
 
     </HBox>
 
-    <!-- VISUALIZER PANELS -->
+    <!--VISUALIZER PANELS-->
     <ScrollPane fitToHeight="true" fitToWidth="true"
                 VBox.vgrow="ALWAYS" styleClass="viz-scroll">
         <content>

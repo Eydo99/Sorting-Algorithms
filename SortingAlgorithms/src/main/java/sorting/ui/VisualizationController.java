@@ -18,14 +18,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class VisualizationController {
-
-    // ── FXML fields ──────────────────────────────────────────────
     @FXML private ComboBox<String> vizTypeCombo;
     @FXML private TextField        vizSizeField;
     @FXML private Slider           speedSlider;
     @FXML private HBox             visualizerBox;
 
-    // ── Algorithm checkboxes ─────────────────────────────────────
     @FXML private CheckBox vizCheckBubble;
     @FXML private CheckBox vizCheckInsertion;
     @FXML private CheckBox vizCheckSelection;
@@ -37,12 +34,8 @@ public class VisualizationController {
     @FXML private Label  selectedFileLabel;
     private String selectedFilePath = null;
 
-    // ── One animator per panel ───────────────────────────────────
     private final List<SortAnimator> animators = new ArrayList<>();
 
-    // ─────────────────────────────────────────────────────────────
-    // initialize() — called automatically after FXML loads
-    // ─────────────────────────────────────────────────────────────
     @FXML
     public void initialize() {
         vizTypeCombo.getItems().addAll(
@@ -51,24 +44,18 @@ public class VisualizationController {
         vizTypeCombo.setValue("RANDOM");
     }
 
-    // ─────────────────────────────────────────────────────────────
-    // handleAddVisualizer() — creates one panel per checked algo
-    // ─────────────────────────────────────────────────────────────
     @FXML
     private void handleAddVisualizer() {
 
-        // 1. Validate algorithms
         List<String> algorithms = getSelectedAlgorithms();
         if (algorithms.isEmpty()) {
-            showAlert("Please select at least one algorithm.");
+            showAlert("Please select at least one algorithm");
             return;
         }
 
-        // 2. Build base array — from file or random
         int[] baseArray = buildBaseArray();
         if (baseArray == null) return;
 
-        // 3. Create one panel per selected algorithm
         for (String algoName : algorithms) {
 
             SortAlgorithm algo = SortAlgorithmFactory.getAlgorithm(algoName);
@@ -79,7 +66,7 @@ public class VisualizationController {
             List<SortStep> steps = algo.getSteps();
 
             if (steps.isEmpty()) {
-                showAlert(algoName + " produced no steps. Try a larger array.");
+                showAlert(algoName + " produced no steps. Try a larger array");
                 continue;
             }
 
@@ -97,14 +84,9 @@ public class VisualizationController {
         }
     }
 
-    // ─────────────────────────────────────────────────────────────
-// buildBaseArray() — returns array from file or random
-// Returns null if any validation fails
-// ─────────────────────────────────────────────────────────────
     private int[] buildBaseArray() {
 
         if (selectedFilePath != null) {
-            // ── FROM FILE mode ──
             int[] array = ArrayGenerator.generateFromFile(selectedFilePath);
 
             if (array == null) {
@@ -112,20 +94,18 @@ public class VisualizationController {
                 return null;
             }
             if (array.length < 2) {
-                showAlert("File must contain at least 2 elements.");
+                showAlert("File must contain at least 2 elements");
                 return null;
             }
             if (array.length > 100) {
-                showAlert("File array too large — maximum 100 elements for visualization.");
+                showAlert("File array too large — maximum 100 elements for visualization");
                 return null;
             }
-
             return array;
 
         } else {
-            // ── FROM RANDOM mode ──
             if (vizTypeCombo.getValue() == null) {
-                showAlert("Please select an array type.");
+                showAlert("Please select an array type");
                 return null;
             }
 
@@ -133,11 +113,11 @@ public class VisualizationController {
             try {
                 size = Integer.parseInt(vizSizeField.getText().trim());
                 if (size < 2 || size > 100) {
-                    showAlert("Array size must be between 2 and 100.");
+                    showAlert("Array size must be between 2 and 100");
                     return null;
                 }
             } catch (NumberFormatException e) {
-                showAlert("Array size must be a valid number.");
+                showAlert("Array size must be a valid number");
                 return null;
             }
 
@@ -146,13 +126,10 @@ public class VisualizationController {
         }
     }
 
-    // ─────────────────────────────────────────────────────────────
-    // handlePlay() — starts all animators together
-    // ─────────────────────────────────────────────────────────────
     @FXML
     private void handlePlay() {
         if (animators.isEmpty()) {
-            showAlert("Add at least one visualizer first.");
+            showAlert("Add at least one visualizer first");
             return;
         }
 
@@ -162,9 +139,6 @@ public class VisualizationController {
         }
     }
 
-    // ─────────────────────────────────────────────────────────────
-    // handlePause() — pauses all animators
-    // ─────────────────────────────────────────────────────────────
     @FXML
     private void handlePause() {
         for (SortAnimator animator : animators) {
@@ -172,9 +146,6 @@ public class VisualizationController {
         }
     }
 
-    // ─────────────────────────────────────────────────────────────
-    // handleStep() — advances all animators by one step
-    // ─────────────────────────────────────────────────────────────
     @FXML
     private void handleStep() {
         for (SortAnimator animator : animators) {
@@ -182,23 +153,15 @@ public class VisualizationController {
         }
     }
 
-    // ─────────────────────────────────────────────────────────────
-    // handleReset() — resets all animators and clears panels
-    // ─────────────────────────────────────────────────────────────
     @FXML
     private void handleReset() {
         for (SortAnimator animator : animators) animator.reset();
         visualizerBox.getChildren().clear();
         animators.clear();
-
-        // Clear file selection
         selectedFilePath = null;
         selectedFileLabel.setText("No file selected");
     }
 
-    // ─────────────────────────────────────────────────────────────
-    // getSelectedAlgorithms() — returns list of checked algorithms
-    // ─────────────────────────────────────────────────────────────
     private List<String> getSelectedAlgorithms() {
         List<String> selected = new ArrayList<>();
         if (vizCheckBubble.isSelected())    selected.add("BubbleSort");
@@ -210,9 +173,6 @@ public class VisualizationController {
         return selected;
     }
 
-    // ─────────────────────────────────────────────────────────────
-    // showAlert() — shows a warning popup
-    // ─────────────────────────────────────────────────────────────
     private void showAlert(String message) {
         Alert alert = new Alert(Alert.AlertType.WARNING);
         alert.setTitle("Input Error");

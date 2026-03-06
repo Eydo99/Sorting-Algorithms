@@ -192,7 +192,7 @@ public class ComparisonController {
     @FXML
     private void handleExportCsv() {
         if (results.isEmpty()) {
-            showAlert("No results to export.");
+            showAlert("No results to export");
             return;
         }
 
@@ -241,7 +241,7 @@ public class ComparisonController {
     private List<ComparisonTask> buildTasksFromForm() {
         List<String> selectedAlgorithms = getSelectedAlgorithms();
         if (selectedAlgorithms.isEmpty()) {
-            showAlert("No algorithms selected.");
+            showAlert("No algorithms selected");
             return null;
         }
 
@@ -249,7 +249,7 @@ public class ComparisonController {
         try {
             runs = Integer.parseInt(runsField.getText().trim());
             if (runs < 1) {
-                showAlert("Please enter a number greater than 1.");
+                showAlert("Please enter a number greater than 1");
                 return null;
             }
         } catch (NumberFormatException e) {
@@ -271,7 +271,7 @@ public class ComparisonController {
             try {
                 size = Integer.parseInt(arraySizeField.getText().trim());
                 if (size < 1) {
-                    showAlert("Please enter a number greater than 1.");
+                    showAlert("Please enter a number greater than 1");
                     return null;
                 }
             } catch (NumberFormatException e) {

@@ -11,18 +11,12 @@
             prefHeight="650.0" prefWidth="800.0">
     <center>
         <TabPane tabClosingPolicy="UNAVAILABLE">
-            <tabs>
-                <Tab text="Comparison Mode">
-                    <content>
-                        <fx:include source="Comparison.fxml"/>
-                    </content>
-                </Tab>
-                <Tab text="Visualization Mode">
-                    <content>
-                        <fx:include source="Visualization.fxml"/>
-                    </content>
-                </Tab>
-            </tabs>
+            <Tab text="Comparison Mode">
+                <fx:include source="Comparison.fxml"/>
+            </Tab>
+            <Tab text="Visualization Mode">
+                <fx:include source="Visualization.fxml"/>
+            </Tab>
         </TabPane>
     </center>
 </BorderPane>
