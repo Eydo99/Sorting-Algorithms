@@ -41,7 +41,7 @@
 18. [Getting Started](#-getting-started)
 19. [Configuration](#-configuration)
 20. [Testing](#-testing)
-21. [Known Limitations & Roadmap](#-known-limitations--roadmap)
+21. [ Roadmap](#-roadmap)
 
 ---
 
@@ -1032,49 +1032,8 @@ Good first targets, because they are plain classes with no JavaFX dependency:
 
 ---
 
-## 🧭 Known Limitations & Roadmap
+## Roadmap
 
-Observations from reading the code, roughly by impact. None block normal use.
-
-### Visualization correctness
-
-| # | Finding | Suggested fix |
-|---|---|---|
-| 1 | **Progress label stays at `0%` until the end.** `SortAnimator` computes `currentStep / sortSteps.size() * 100` with *integer* division, so it is 0 for every frame except the last, which is drawn separately at 100 %. In **Step** mode the final frame never turns teal. | Use `(int) (100.0 * currentStep / size)` and draw the final state when stepping past the end. |
-| 2 | **Counters are interpolated, not exact.** Displayed comparisons/interchanges are `total × currentStep / totalSteps`, a linear estimate rather than the real count at that step. | Store the counters in each `SortStep`. |
-| 3 | **MergeSort frames show sub-arrays.** Merge writes into the temporary `left`/`right` arrays it creates, and `addStep` clones *that* array, so early frames show the small arrays being merged (bar widths change) rather than the whole array; only the last merge shows all *n* bars. | Pass the full array and an offset into `merge`, or sort in place on a shared buffer. |
-| 4 | **Speed only applies at Play time** (slider value is read once). | Bind the slider to the timeline rate. |
-| 5 | **Audio runs on the FX thread.** `playTone` writes a 50 ms buffer synchronously for every frame of every panel; with several panels at high speed this can stall the UI. `closeAudio()` is never called. | Play tones on a dedicated audio thread/queue; close the line on exit. |
-
-### Benchmark methodology
-
-| # | Finding | Suggested fix |
-|---|---|---|
-| 6 | No **JIT warm-up**, and the timed region includes `original.clone()`, so early runs inflate the max (see the 10–40× min/max spreads). | Add warm-up runs; clone outside the timed section; report the median. |
-| 7 | **Parallel mode distorts timings** (tasks share cores/caches). Results also appear only after *all* tasks finish, whereas sequential mode adds rows as they complete. | Show a "use sequential for timing" hint; stream results with `ExecutorCompletionService`. |
-| 8 | **Bubble Sort has no early exit**, so it never benefits from sorted input (always `n(n−1)/2` comparisons). | Add a `swapped` flag if an adaptive variant is wanted. |
-| 9 | **Quick Sort + many duplicates.** Values come from `0–99`, and the `<=` partition sends all equal keys to one side, so large arrays full of ties degrade toward O(n²) with deeper recursion. | Three-way (Dutch-flag) partition; hoist `Random` to a field. |
-| 10 | The summary-bar **AVG / MIN / MAX mixes all rows** (different sizes and types), so it is only meaningful when every row shares one configuration. | Compute per size/type, or label it "across all rows". |
-| 11 | Counter semantics differ between algorithms (see [the table](#what-comparisons-and-interchanges-mean-here)). | Document or standardise (e.g. count writes uniformly). |
-
-### Robustness
-
-| # | Finding | Suggested fix |
-|---|---|---|
-| 12 | **Brittle file parsing.** Needs `", "` separators on one line; `generateFromFile` returns `null` on I/O errors, and the runner then hits a `NullPointerException` inside the background task (pending rows are never cleared, no message shown). An empty file also NPEs. | Handle errors and show an `Alert`; accept any whitespace/comma format and multiple lines. |
-| 13 | `SortAlgorithmFactory` returns `null` for unknown names, and `ParallelComparisonManager` only `println`s `ExecutionException`s (that task's results silently go missing). | Throw `IllegalArgumentException`; propagate errors to the UI. |
-| 14 | `CSVExporter` always creates `data/output/` (even if you save elsewhere) and reports success/failure only on stdout. | Create the chosen file's parent; show a dialog. |
-| 15 | Validation text says "greater than 1" but `1` is accepted. | Fix the message. |
-| 16 | `VisualizationController` casts to `AbstractSort` to call `setSteps(true)` although `setSteps` is already on the `SortAlgorithm` interface. | Remove the cast. |
-
-### Project hygiene
-
-| # | Finding | Suggested fix |
-|---|---|---|
-| 17 | `venv/pyvenv.cfg` (contains a local absolute path), `texput.log` and nested `.idea/` folders are committed. | Add to `.gitignore`. |
-| 18 | The original `README` says MIT, but no `LICENSE` file is included. | Add one. |
-| 19 | Debug `System.out.println` calls in `Main`, algorithm and I/O classes; a commented-out `main` in `ArrayGenerator`. | Use a logger; delete dead code. |
-| 20 | **No automated tests.** | See [Testing](#-testing). |
 
 ### Roadmap ideas
 
